@@ -1,0 +1,65 @@
+{
+  "subjects": [
+    {
+      "name": "ADBMS",
+      "resources": {
+        "Insem": [],
+        "Endsem": []
+      }
+    },
+    {
+      "name": "HCI",
+      "resources": {
+        "Insem": [],
+        "Endsem": []
+      }
+    },
+    {
+      "name": "ML",
+      "resources": {
+        "Insem": [],
+        "Endsem": []
+      }
+    },
+    {
+      "name": "OS",
+      "resources": {
+        "Insem": [],
+        "Endsem": []
+      }
+    },
+    {
+      "name": "TOC",
+      "resources": {
+        "Insem": [
+          {
+            "type": "group",
+            "title": "Insem Que Paper",
+            "items": [
+              {
+                "title": "Insem Que Paper - TOC_Sep -2024",
+                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep -2024.pdf"
+              },
+              {
+                "title": "Insem Que Paper - TOC_Sep-2023",
+                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep-2023.pdf"
+              }
+            ]
+          }
+        ],
+        "Endsem": [
+          {
+            "type": "group",
+            "title": "Unit 3",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - TOC_Unit3_HandwrittenNotes",
+                "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

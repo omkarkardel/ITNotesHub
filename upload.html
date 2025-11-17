@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Resources • TE Notes</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .upload-wrap { padding: 1.25rem; }
+    .panel { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+    .row { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+    .row > * { margin: .25rem 0; }
+    .btn { background: var(--accent); color:#fff; border:none; border-radius:8px; padding:.6rem .9rem; cursor:pointer; font-weight:600; }
+    .btn.secondary { background:#333; }
+    .status { font-size:.85rem; opacity:.8; margin-top:.5rem; }
+    .log { margin-top:1rem; padding:.75rem; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; max-height:260px; overflow:auto; font-size:.85rem; }
+    .ok { color:#51cf66; }
+    .warn { color:#ffd43b; }
+    .err { color:#ff6b6b; }
+    .tip { opacity:.8; font-size:.85rem; }
+    a.home { display:inline-block; margin: .75rem 1.25rem; }
+    .sections { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1rem; margin-top:1rem; }
+    .column { background: var(--panel-alt); border:1px solid var(--border); border-radius: var(--radius); padding: .75rem; }
+    .column h2 { margin:.25rem 0 .5rem; font-size:1.1rem; }
+    .section { border:1px dashed var(--border); border-radius:10px; padding:.6rem .75rem; margin:.5rem 0; background:#151515; }
+    .section-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+    .section-title { font-weight:600; }
+    .type-select { display:flex; align-items:center; gap:.35rem; }
+    .dropzone { margin-top:.5rem; padding:.75rem; border:1px dashed #444; border-radius:8px; text-align:center; opacity:.9; }
+    .dropzone.drag { background:#1f1f1f; border-color: var(--accent); }
+    .mini { font-size:.8rem; opacity:.8; }
+  </style>
+</head>
+<body>
+  <a class="home" href="index.html">← Back to Home</a>
+  <div class="upload-wrap">
+    <h1>Upload Notes</h1>
+    <p class="tagline">Upload like your notes structure: pick subject, then drop files into Insem/Endsem sections.</p>
+
+    <div class="panel">
+      <div class="row">
+        <label>
+          <span>Subject:</span>
+          <select id="subjectSelect" disabled>
+            <option value="">Select</option>
+            <option>TOC</option>
+            <option>HCI</option>
+            <option>ML</option>
+            <option>OS</option>
+            <option>ADBMS</option>
+          </select>
+        </label>
+        <button id="buildManifest" class="btn secondary" disabled>Rebuild Manifest</button>
+      </div>
+
+      <div id="sections" class="sections" aria-live="polite">
+        <div class="column" data-exam="Insem">
+          <h2>Insem</h2>
+          <div class="section" data-section="Unit1" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit1</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Unit2" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit2</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Insem Que Paper">
+            <div class="section-header">
+              <span class="section-title">Insem Que Paper</span>
+              <div>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Insem Que Paper Solution">
+            <div class="section-header">
+              <span class="section-title">Insem Que Paper Solution</span>
+              <div>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+        </div>
+        <div class="column" data-exam="Endsem">
+          <h2>Endsem</h2>
+          <div class="section" data-section="Unit3" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit3</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Unit4" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit4</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Unit5" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit5</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Unit6" data-need-type="true">
+            <div class="section-header">
+              <span class="section-title">Unit6</span>
+              <div class="type-select">
+                <label class="mini">Type</label>
+                <select class="type">
+                  <option value="handwritten">Handwritten Notes</option>
+                  <option value="imp">IMP Questions</option>
+                </select>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Endsem Que Paper">
+            <div class="section-header">
+              <span class="section-title">Endsem Que Paper</span>
+              <div>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+          <div class="section" data-section="Endsem Que Paper Solution">
+            <div class="section-header">
+              <span class="section-title">Endsem Que Paper Solution</span>
+              <div>
+                <button class="btn secondary browse">Browse files</button>
+              </div>
+            </div>
+            <div class="dropzone mini">Drop files here</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mini">
+        <span>Tip: drag & drop files into a section or use Browse. Then click Download ZIP and extract into the project root, replacing files/. Finally run the manifest builder.</span>
+      </div>
+      <input id="filePicker" type="file" multiple style="display:none" />
+      <p class="tip">Tip: Works best in Chromium-based browsers over localhost (secure context).</p>
+      <div id="log" class="log" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script src="upload.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TE Class Notes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>TE Class Notes</h1>
+    <p class="tagline">Quick access to organized subject notes</p>
+    <div class="controls">
+      <label>
+        <span>Subject:</span>
+        <select id="subjectFilter">
+          <option value="all">All</option>
+        </select>
+      </label>
+      <label>
+        <span>Exam:</span>
+        <select id="examFilter">
+          <option value="all">All</option>
+          <option value="Insem">Insem</option>
+          <option value="Endsem">Endsem</option>
+        </select>
+      </label>
+    </div>
+    <div class="controls" style="margin-top:.5rem">
+      <a href="upload.html" class="resource-link" style="display:inline-block;padding:.5rem .75rem">Upload Resources →</a>
+    </div>
+  </header>
+
+  <main id="notesContainer" class="notes"></main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> TE IT Notes. By Developer.</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
