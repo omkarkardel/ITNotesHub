@@ -2,7 +2,7 @@
 // Requires a secure context (localhost). Falls back to instructions if unsupported.
 
 (async function(){
-  const API_BASE = 'http://localhost:3000';
+  const API_BASES = ['/.netlify/functions', 'http://localhost:3000'];
   const buildManifestBtn = document.getElementById('buildManifest');
   const filePicker = document.getElementById('filePicker');
   const logEl = document.getElementById('log');
@@ -47,20 +47,20 @@
     const type = getTypeForSection(sectionEl);
     if (type) fd.append('type', type);
     for (const f of files) fd.append('files', f, f.name);
-    try {
-      const resp = await fetch(API_BASE + '/upload', { method: 'POST', body: fd });
-      const data = await resp.json();
-      if (!resp.ok || !data.ok){
-        log(`Upload failed: ${data.error || resp.statusText}`, 'err');
-        return false;
-      }
-      log(`Uploaded ${data.saved} file(s) to ${subject}/${exam}/${label} and rebuilt manifest.`, 'ok');
-      buildManifestBtn.disabled = false; // allow manual rebuild too
-      return true;
-    } catch (e){
-      log(`Server error: ${e.message}`, 'err');
-      return false;
+    for (const base of API_BASES){
+      try {
+        const url = base.endsWith('/upload') ? base : base + '/upload';
+        const resp = await fetch(url, { method: 'POST', body: fd });
+        const data = await resp.json().catch(() => ({}));
+        if (resp.ok && data && data.ok){
+          const msgTail = base.startsWith('/.') ? 'Netlify function' : 'local server';
+          log(`Uploaded ${data.saved} file(s) to ${subject}/${exam}/${label} via ${msgTail}.`, 'ok');
+          return true;
+        }
+      } catch (e){ /* try next base */ }
     }
+    log('Upload failed: no backend reachable (Netlify function or local server).', 'err');
+    return false;
   }
 
   // client no longer computes filenames; server handles naming
@@ -72,7 +72,7 @@
   // manual rebuild trigger
   buildManifestBtn.addEventListener('click', async () => {
     try {
-      const resp = await fetch(API_BASE + '/build', { method:'POST' });
+      const resp = await fetch('http://localhost:3000/build', { method:'POST' });
       const data = await resp.json();
       if (!resp.ok || !data.ok) return log('Manifest rebuild failed.', 'err');
       log('Manifest rebuilt.', 'ok');

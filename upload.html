@@ -3,39 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Upload Resources • TE Notes</title>
+  <title>Upload Resources • ITNotesHub</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
     .upload-wrap { padding: 1.25rem; }
-    .panel { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+    .panel { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; box-shadow:var(--shadow); }
     .row { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
     .row > * { margin: .25rem 0; }
     .btn { background: var(--accent); color:#fff; border:none; border-radius:8px; padding:.6rem .9rem; cursor:pointer; font-weight:600; }
-    .btn.secondary { background:#333; }
+    .btn.secondary { background: var(--panel-alt); color:var(--text); }
+    .btn.secondary:hover { background: var(--panel); }
     .status { font-size:.85rem; opacity:.8; margin-top:.5rem; }
     .log { margin-top:1rem; padding:.75rem; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; max-height:260px; overflow:auto; font-size:.85rem; }
-    .ok { color:#51cf66; }
-    .warn { color:#ffd43b; }
-    .err { color:#ff6b6b; }
+    .ok { color:#12b886; }
+    .warn { color:#ffa94d; }
+    .err { color:#ff4d4f; }
     .tip { opacity:.8; font-size:.85rem; }
     a.home { display:inline-block; margin: .75rem 1.25rem; }
     .sections { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1rem; margin-top:1rem; }
     .column { background: var(--panel-alt); border:1px solid var(--border); border-radius: var(--radius); padding: .75rem; }
-    .column h2 { margin:.25rem 0 .5rem; font-size:1.1rem; }
-    .section { border:1px dashed var(--border); border-radius:10px; padding:.6rem .75rem; margin:.5rem 0; background:#151515; }
+    .column h2 { margin:.25rem 0 .5rem; font-size:1.1rem; color:var(--text); }
+    .section { border:1px dashed var(--border); border-radius:10px; padding:.6rem .75rem; margin:.5rem 0; background:var(--panel-alt); }
     .section-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
     .section-title { font-weight:600; }
     .type-select { display:flex; align-items:center; gap:.35rem; }
-    .dropzone { margin-top:.5rem; padding:.75rem; border:1px dashed #444; border-radius:8px; text-align:center; opacity:.9; }
-    .dropzone.drag { background:#1f1f1f; border-color: var(--accent); }
+    .dropzone { margin-top:.5rem; padding:.75rem; border:1px dashed var(--border); border-radius:8px; text-align:center; opacity:.9; background:var(--panel); }
+    .dropzone.drag { background:var(--panel-alt); border-color: var(--accent); }
     .mini { font-size:.8rem; opacity:.8; }
+    [data-theme='dark'] .btn.secondary { background:var(--panel); }
+    [data-theme='dark'] .btn.secondary:hover { background:var(--panel-alt); }
   </style>
 </head>
 <body>
   <a class="home" href="index.html">← Back to Home</a>
   <div class="upload-wrap">
-    <h1>Upload Notes</h1>
-    <p class="tagline">Upload like your notes structure: pick subject, then drop files into Insem/Endsem sections.</p>
+    <h1 style="margin:0 0 .75rem;font-size:2.1rem;color:var(--text);letter-spacing:.5px;">Upload Notes</h1>
+    <p class="tagline" style="color:var(--muted);font-size:1rem;margin:0 0 .9rem;">Subject wise structure: drop or browse files into Insem / Endsem sections.</p>
+    <button id="themeToggle" type="button" class="theme-toggle" aria-label="Toggle light/dark theme" style="margin:0 0 1.1rem;">Dark Mode</button>
 
     <div class="panel">
       <div class="row">
@@ -50,7 +54,7 @@
             <option>ADBMS</option>
           </select>
         </label>
-        <button id="buildManifest" class="btn secondary" disabled>Rebuild Manifest</button>
+        <button id="buildManifest" class="btn" disabled>Upload</button>
       </div>
 
       <div id="sections" class="sections" aria-live="polite">
@@ -133,7 +137,7 @@
             </div>
             <div class="dropzone mini">Drop files here</div>
           </div>
-          <div class="section" data-section="Unit5" data-need-type="true">
+            <div class="section" data-section="Unit5" data-need-type="true">
             <div class="section-header">
               <span class="section-title">Unit5</span>
               <div class="type-select">
@@ -182,8 +186,8 @@
         </div>
       </div>
 
-      <div class="row mini">
-        <span>Tip: drag & drop files into a section or use Browse. Then click Download ZIP and extract into the project root, replacing files/. Finally run the manifest builder.</span>
+      <div class="row mini" style="margin-top:1rem;color:var(--muted);">
+        <span>Tip: Drag or browse files. Each upload updates the manifest (local) or commits (Netlify). Refresh home page to view.</span>
       </div>
       <input id="filePicker" type="file" multiple style="display:none" />
       <p class="tip">Tip: Works best in Chromium-based browsers over localhost (secure context).</p>
@@ -191,6 +195,7 @@
     </div>
   </div>
 
+  <script src="theme.js"></script>
   <script src="upload.js"></script>
 </body>
 </html>
