@@ -10,12 +10,40 @@
             "items": [
               {
                 "title": "ADBMS_Oct_22",
-                "url": "files/ADBMS/Insem/Insem Que Paper - ADBMS_Oct_22.pdf"
+                "url": "files/ADBMS/Insem/Insem Que Paper - ADBMS_Oct_22.pdf",
+                "mtime": "2025-11-18T02:45:56.169Z"
+              },
+              {
+                "title": "August_2025",
+                "url": "files/ADBMS/Insem/Insem Que Paper - August_2025.pdf",
+                "mtime": "2025-11-21T07:13:57.161Z"
               }
             ]
           }
         ],
-        "Endsem": []
+        "Endsem": [
+          {
+            "type": "group",
+            "title": "Endsem Que Paper",
+            "items": [
+              {
+                "title": "Adbms question paper_2023",
+                "url": "files/ADBMS/Endsem/Endsem Que Paper - Adbms question paper_2023.pdf",
+                "mtime": "2025-11-21T10:15:39.175Z"
+              },
+              {
+                "title": "ADBMS_2023",
+                "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS_2023.pdf",
+                "mtime": "2025-11-21T07:57:36.302Z"
+              },
+              {
+                "title": "ADBMS_QuePaper",
+                "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS_QuePaper.pdf",
+                "mtime": "2025-11-21T07:39:18.385Z"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -29,27 +57,44 @@
             "items": [
               {
                 "title": "May_Jun_2023",
-                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2023.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
+                "mtime": "2025-11-18T16:36:25.921Z"
               },
               {
                 "title": "May_Jun_2024",
-                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2024.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
+                "mtime": "2025-11-18T16:36:43.064Z"
               },
               {
                 "title": "May_Jun_2025",
-                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2025.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
+                "mtime": "2025-11-18T16:37:35.709Z"
               },
               {
                 "title": "Nov_Dec_2022",
-                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
+                "mtime": "2025-11-18T16:37:47.052Z"
               },
               {
                 "title": "Nov_Dec_2023",
-                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
+                "mtime": "2025-11-18T16:37:57.675Z"
               },
               {
                 "title": "Nov_Dec_2024",
-                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf"
+                "url": "files/HCI/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
+                "mtime": "2025-11-18T16:38:10.698Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Decode/Book",
+            "items": [
+              {
+                "title": "HCI_Decode",
+                "url": "files/HCI/Endsem/HCI_Decode.pdf",
+                "mtime": "2025-11-21T08:59:26.564Z"
               }
             ]
           }
@@ -66,32 +111,45 @@
             "title": "Endsem Que Paper",
             "items": [
               {
-                "title": "August_2025",
-                "url": "files/ML/Endsem/Endsem Que Paper - August_2025.pdf"
-              },
-              {
                 "title": "May_Jun_2023",
-                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2023.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
+                "mtime": "2025-11-18T16:30:55.676Z"
               },
               {
                 "title": "May_Jun_2024",
-                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2024.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
+                "mtime": "2025-11-18T16:31:12.603Z"
               },
               {
                 "title": "May_Jun_2025",
-                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2025.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
+                "mtime": "2025-11-18T16:31:25.984Z"
               },
               {
                 "title": "Nov_Dec_2022",
-                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
+                "mtime": "2025-11-18T16:31:42.028Z"
               },
               {
                 "title": "Nov_Dec_2023",
-                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
+                "mtime": "2025-11-18T16:31:53.765Z"
               },
               {
                 "title": "Nov_Dec_2024",
-                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf"
+                "url": "files/ML/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
+                "mtime": "2025-11-18T16:32:06.801Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Decode/Book",
+            "items": [
+              {
+                "title": "ML_Decode",
+                "url": "files/ML/Endsem/ML_Decode.pdf",
+                "mtime": "2025-11-21T10:35:11.768Z"
               }
             ]
           }
@@ -101,39 +159,79 @@
     {
       "name": "OS",
       "resources": {
-        "Insem": [],
+        "Insem": [
+          {
+            "type": "group",
+            "title": "Insem Que Paper",
+            "items": [
+              {
+                "title": "August_2025",
+                "url": "files/OS/Insem/Insem Que Paper - August_2025.pdf",
+                "mtime": "2025-11-21T07:10:55.152Z"
+              },
+              {
+                "title": "Oct - 2022",
+                "url": "files/OS/Insem/Insem Que Paper - Oct - 2022.pdf",
+                "mtime": "2025-11-21T07:17:02.145Z"
+              },
+              {
+                "title": "Sep - 2023",
+                "url": "files/OS/Insem/Insem Que Paper - Sep - 2023.pdf",
+                "mtime": "2025-11-21T07:09:28.292Z"
+              },
+              {
+                "title": "Sep - 2024",
+                "url": "files/OS/Insem/Insem Que Paper - Sep - 2024.pdf",
+                "mtime": "2025-11-21T07:08:45.659Z"
+              }
+            ]
+          }
+        ],
         "Endsem": [
           {
             "type": "group",
             "title": "Endsem Que Paper",
             "items": [
               {
-                "title": "August_2025",
-                "url": "files/OS/Endsem/Endsem Que Paper - August_2025.pdf"
-              },
-              {
                 "title": "May_Jun_2023",
-                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2023.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
+                "mtime": "2025-11-18T16:20:41.625Z"
               },
               {
                 "title": "May_Jun_2024",
-                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2024.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
+                "mtime": "2025-11-18T16:21:00.132Z"
               },
               {
                 "title": "May_Jun_2025",
-                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2025.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
+                "mtime": "2025-11-18T16:21:19.858Z"
               },
               {
                 "title": "Nov_Dec_2022",
-                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
+                "mtime": "2025-11-18T16:22:07.131Z"
               },
               {
                 "title": "Nov_Dec_2023",
-                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
+                "mtime": "2025-11-18T16:22:21.590Z"
               },
               {
                 "title": "Nov_Dec_2024",
-                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf"
+                "url": "files/OS/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
+                "mtime": "2025-11-18T16:22:38.421Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Decode/Book",
+            "items": [
+              {
+                "title": "OS_Decode",
+                "url": "files/OS/Endsem/OS_Decode.pdf",
+                "mtime": "2025-11-21T10:35:24.723Z"
               }
             ]
           }
@@ -150,15 +248,18 @@
             "items": [
               {
                 "title": "TOC_Oct- 2022",
-                "url": "files/TOC/Insem/Insem Que Paper - TOC_Oct- 2022.pdf"
+                "url": "files/TOC/Insem/Insem Que Paper - TOC_Oct- 2022.pdf",
+                "mtime": "2025-11-17T17:17:17.967Z"
               },
               {
                 "title": "TOC_Sep -2024",
-                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep -2024.pdf"
+                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep -2024.pdf",
+                "mtime": "2025-11-17T16:43:39.656Z"
               },
               {
                 "title": "TOC_Sep-2023",
-                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep-2023.pdf"
+                "url": "files/TOC/Insem/Insem Que Paper - TOC_Sep-2023.pdf",
+                "mtime": "2025-11-17T16:51:41.125Z"
               }
             ]
           }
@@ -169,32 +270,45 @@
             "title": "Endsem Que Paper",
             "items": [
               {
-                "title": "August_2025",
-                "url": "files/TOC/Endsem/Endsem Que Paper - August_2025.pdf"
-              },
-              {
                 "title": "May_Jun_2023",
-                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2023.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
+                "mtime": "2025-11-18T16:11:55.296Z"
               },
               {
                 "title": "May_Jun_2024",
-                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2024.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
+                "mtime": "2025-11-18T16:12:50.726Z"
               },
               {
                 "title": "May_Jun_2025",
-                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2025.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
+                "mtime": "2025-11-18T16:13:09.769Z"
               },
               {
                 "title": "Nov_Dec_2022",
-                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
+                "mtime": "2025-11-18T16:13:50.014Z"
               },
               {
                 "title": "Nov_Dec_2023",
-                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
+                "mtime": "2025-11-18T16:14:10.557Z"
               },
               {
                 "title": "Nov_Dec_2024",
-                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf"
+                "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
+                "mtime": "2025-11-18T16:14:31.149Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Decode/Book",
+            "items": [
+              {
+                "title": "TOC_Decode",
+                "url": "files/TOC/Endsem/TOC_Decode.pdf",
+                "mtime": "2025-11-21T08:26:06.072Z"
               }
             ]
           },
@@ -204,7 +318,8 @@
             "items": [
               {
                 "title": "Handwritten Notes - Handwritten Notes - TOC_Unit3_HandwrittenNotes",
-                "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf"
+                "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf",
+                "mtime": "2025-11-17T16:38:57.765Z"
               }
             ]
           }

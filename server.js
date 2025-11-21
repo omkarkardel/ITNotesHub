@@ -19,6 +19,8 @@ app.use(express.json());
 const ROOT = process.cwd();
 const FILES_DIR = path.join(ROOT, 'files');
 
+app.use(express.static(ROOT)); // Serve static files (HTML, CSS, JS, etc.)
+
 function ensureDirSync(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
@@ -81,6 +83,30 @@ app.post('/build', async (_req, res) => {
     res.json({ ok });
   } catch (e){
     res.status(500).json({ ok:false, error:e.message });
+  }
+});
+
+// Delete a single file by its URL path as shown in resources.json
+// Body: { url: "files/Subject/Exam/.../filename.ext" }
+app.post('/delete', async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ ok:false, error:'Missing url' });
+    // Normalize and build absolute path
+    const safeRel = url.replace(/\\/g,'/').replace(/^[/.]+/, '');
+    const abs = path.join(ROOT, safeRel.split('/').join(path.sep));
+    if (!abs.startsWith(FILES_DIR)) {
+      return res.status(400).json({ ok:false, error:'Invalid path' });
+    }
+    if (!fs.existsSync(abs)) {
+      return res.status(404).json({ ok:false, error:'File not found' });
+    }
+    await fsp.unlink(abs);
+    const ok = await rebuildManifest();
+    return res.json({ ok, deleted: url });
+  } catch (e){
+    console.error(e);
+    return res.status(500).json({ ok:false, error:e.message });
   }
 });
 

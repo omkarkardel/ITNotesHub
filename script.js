@@ -1,3 +1,75 @@
+// Keyboard shortcuts handler - robust
+(() => {
+  const redirectToUpload = () => {
+    const target = 'upload.html';
+    console.log('[Shortcut] Attempt redirect to', target);
+    try {
+      window.location.href = target;
+      // Fallback retry after 300ms if pathname didn't change
+      setTimeout(() => {
+        if (!/upload\.html$/i.test(window.location.pathname)) {
+          console.log('[Shortcut] Primary redirect not visible, forcing navigation.');
+          window.open(target, '_self');
+        }
+      }, 300);
+    } catch (err) {
+      console.warn('[Shortcut] Redirect error:', err);
+      alert('Unable to open upload page automatically. Please click the Upload button.');
+    }
+  };
+
+  const isEnter = (e) => (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter');
+
+  // Unified keydown handler (capture phase to beat other listeners)
+  document.addEventListener('keydown', (e) => {
+    // Debug log (only first few presses to avoid spam)
+    if (!window.__keyLogCount) window.__keyLogCount = 0;
+    if (window.__keyLogCount < 5) {
+      console.log('[Key]', e.key, 'Shift:', e.shiftKey, 'Ctrl:', e.ctrlKey, 'Alt:', e.altKey, 'Code:', e.code);
+      window.__keyLogCount++;
+    }
+
+    // Shift+Enter -> upload page
+    if (isEnter(e) && e.shiftKey && !e.ctrlKey && !e.altKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('✓ Shift+Enter detected (keydown).');
+      redirectToUpload();
+      return;
+    }
+    // Admin delete mode toggle: Ctrl+Shift+D
+    if (e.key.toLowerCase() === 'd' && e.shiftKey && e.ctrlKey) {
+      e.preventDefault();
+      document.body.classList.toggle('admin-delete');
+      console.log('[Admin] Delete mode:', document.body.classList.contains('admin-delete'));
+      return;
+    }
+    // Escape closes preview modal
+    if (e.key === 'Escape' && window.closePreview) {
+      e.preventDefault();
+      window.closePreview();
+      return;
+    }
+  });
+
+  // Keyup fallback (some environments suppress keydown default); capture true
+  document.addEventListener('keyup', (e) => {
+    if (isEnter(e) && e.shiftKey && !e.ctrlKey && !e.altKey) {
+      console.log('✓ Shift+Enter detected (keyup fallback).');
+      redirectToUpload();
+    }
+  }, true);
+  
+  // Extra safety: attach capture listener on window as well
+  window.addEventListener('keydown', (e) => {
+    if (isEnter(e) && e.shiftKey && !e.ctrlKey && !e.altKey) {
+      console.log('✓ Shift+Enter detected (window capture).');
+      e.preventDefault();
+      redirectToUpload();
+    }
+  }, true);
+})();
+
 // Data: structured by subject (fallback if no manifest is present)
 const defaultSubjects = [
   {
@@ -22,6 +94,7 @@ const defaultSubjects = [
       Endsem: [
         { type: 'link', title: 'Endsem Que Paper', url: '#' },
         { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
+        { type: 'link', title: 'Decode/Book', url: '#' },
         { 
           type: 'group', title: 'Unit 3', items: [
             { title: 'Handwritten Notes', url: '#' },
@@ -71,6 +144,7 @@ const defaultSubjects = [
       Endsem: [
         { type: 'link', title: 'Endsem Que Paper', url: '#' },
         { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
+        { type: 'link', title: 'Decode/Book', url: '#' },
         { 
           type: 'group', title: 'Unit 3', items: [
             { title: 'Handwritten Notes', url: '#' },
@@ -120,6 +194,7 @@ const defaultSubjects = [
       Endsem: [
         { type: 'link', title: 'Endsem Que Paper', url: '#' },
         { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
+        { type: 'link', title: 'Decode/Book', url: '#' },
         { 
           type: 'group', title: 'Unit 3', items: [
             { title: 'Handwritten Notes', url: '#' },
@@ -169,6 +244,7 @@ const defaultSubjects = [
       Endsem: [
         { type: 'link', title: 'Endsem Que Paper', url: '#' },
         { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
+        { type: 'link', title: 'Decode/Book', url: '#' },
         { 
           type: 'group', title: 'Unit 3', items: [
             { title: 'Handwritten Notes', url: '#' },
@@ -218,6 +294,7 @@ const defaultSubjects = [
       Endsem: [
         { type: 'link', title: 'Endsem Que Paper', url: '#' },
         { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
+        { type: 'link', title: 'Decode/Book', url: '#' },
         { 
           type: 'group', title: 'Unit 3', items: [
             { title: 'Handwritten Notes', url: '#' },
@@ -252,6 +329,8 @@ let subjects = [];
 
 const subjectFilter = document.getElementById('subjectFilter');
 const examFilter = document.getElementById('examFilter');
+const searchInput = document.getElementById('searchInput');
+const sortSelect = document.getElementById('sortSelect');
 const notesContainer = document.getElementById('notesContainer');
 const yearSpan = document.getElementById('year');
 const breadcrumbs = document.getElementById('breadcrumbs');
@@ -259,6 +338,13 @@ const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileDrawer = document.getElementById('mobileDrawer');
 const closeDrawer = document.getElementById('closeDrawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
+// Modal elements
+const modalOverlay = document.getElementById('modalOverlay');
+const previewModal = document.getElementById('previewModal');
+const modalTitle = document.getElementById('modalTitle');
+const previewInner = document.getElementById('previewInner');
+const modalDownload = document.getElementById('modalDownload');
+const modalClose = document.getElementById('modalClose');
 
 yearSpan.textContent = new Date().getFullYear();
 
@@ -347,6 +433,19 @@ function render(resources) {
         const titleSpan = document.createElement('span');
         titleSpan.textContent = res.title;
         titleDiv.appendChild(titleSpan);
+
+        // Determine group recency (max mtime of its items)
+        if (res.items && res.items.length) {
+          const times = res.items.map(i => i.mtime ? Date.parse(i.mtime) : 0);
+          const maxTime = Math.max(...times);
+          if (maxTime > 0) {
+            const d = new Date(maxTime);
+            const ts = document.createElement('span');
+            ts.className = 'mtime';
+            ts.textContent = 'UPDATED ' + d.toISOString().slice(0,10);
+            titleDiv.appendChild(ts);
+          }
+        }
         
         item.appendChild(titleDiv);
         
@@ -378,6 +477,15 @@ function render(resources) {
               const titleSpan = document.createElement('span');
               titleSpan.textContent = subRes.title;
               contentWrapper.appendChild(titleSpan);
+
+              // Last updated timestamp per item
+              if (subRes.mtime) {
+                const d = new Date(subRes.mtime);
+                const ts = document.createElement('span');
+                ts.className = 'mtime';
+                ts.textContent = d.toISOString().slice(0,10);
+                contentWrapper.appendChild(ts);
+              }
               
               // Add view count
               const viewKey = `${res.title}_${subRes.title}`.replace(/\s+/g, '_');
@@ -400,8 +508,44 @@ function render(resources) {
               downloadBtn.onclick = (e) => { e.stopPropagation(); incrementView(viewKey); };
               link.appendChild(downloadBtn);
 
+              // Admin delete button (hidden unless body.admin-delete)
+              const deleteBtn = document.createElement('button');
+              deleteBtn.type = 'button';
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
+              deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (!subRes.url) return;
+                if (!confirm('Delete this file?\n\n' + subRes.title)) return;
+                try {
+                  const resp = await fetch('/delete', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url: subRes.url }) });
+                  const data = await resp.json();
+                  if (data.ok) {
+                    // Remove item and re-filter to refresh timestamps & ordering
+                    subItem.remove();
+                    applyFilters();
+                  } else {
+                    alert('Delete failed: ' + (data.error || 'Unknown error'));
+                  }
+                } catch (err){
+                  alert('Delete error: ' + err.message);
+                }
+              });
+              link.appendChild(deleteBtn);
+
               
               link.addEventListener('click', (e) => { if(e.target !== downloadBtn) incrementView(viewKey); });
+              // Open files directly in new tab (no preview modal)
+              link.addEventListener('click', (e) => {
+                const targetTag = e.target.tagName.toLowerCase();
+                if (targetTag === 'button' || targetTag === 'svg' || targetTag === 'path') return; // delete icon or button
+                const href = subRes.url || '';
+                if (/\.(pdf|png|jpg|jpeg|gif)$/i.test(href)) {
+                  e.preventDefault();
+                  window.open(href, '_blank');
+                }
+              });
               subItem.appendChild(link);
             }
             sublist.appendChild(subItem);
@@ -418,8 +562,9 @@ function render(resources) {
 function applyFilters() {
   const subjectName = subjectFilter.value;
   const examType = examFilter.value;
+  const term = (searchInput ? searchInput.value.trim().toLowerCase() : '');
+  const sortMode = sortSelect ? sortSelect.value : 'default';
 
-  // Update breadcrumbs
   updateBreadcrumbs(subjectName, examType);
 
   if (subjectName === 'all' || examType === 'all') {
@@ -428,8 +573,32 @@ function applyFilters() {
   }
 
   const subject = subjects.find(s => s.name === subjectName);
-  const resources = subject ? subject.resources[examType] : [];
-  const canonical = canonicalizeResources(examType, resources);
+  let resources = subject ? subject.resources[examType] : [];
+  let canonical = canonicalizeResources(examType, resources);
+
+  // Flatten for filtering by term across group items and links, then rebuild filtered structure
+  if (term) {
+    canonical = canonical.map(group => {
+      if (group.type === 'group' && group.items) {
+        const filteredItems = group.items.filter(i => i.title.toLowerCase().includes(term));
+        return { ...group, items: filteredItems };
+      }
+      return group.title.toLowerCase().includes(term) ? group : { ...group, items: [] };
+    }).filter(g => (g.items && g.items.length) || g.title.toLowerCase().includes(term));
+  }
+
+  // Sorting
+  if (sortMode === 'title') {
+    canonical.sort((a,b) => a.title.localeCompare(b.title));
+  } else if (sortMode === 'views') {
+    // approximate by summing view counts of items
+    const vc = g => (g.items||[]).reduce((sum,i)=> sum + getViewCount(`${g.title}_${i.title}`.replace(/\s+/g,'_')),0);
+    canonical.sort((a,b) => vc(b) - vc(a));
+  } else if (sortMode === 'recent') {
+    const grpTime = g => Math.max(...(g.items||[]).map(i => i.mtime ? Date.parse(i.mtime) : 0), 0);
+    canonical.sort((a,b) => grpTime(b) - grpTime(a));
+  }
+
   render(canonical);
 }
 
@@ -464,18 +633,27 @@ function downloadAllFiles(group) {
 
 subjectFilter.addEventListener('change', applyFilters);
 examFilter.addEventListener('change', applyFilters);
+if (searchInput) searchInput.addEventListener('input', () => applyFilters());
+if (sortSelect) sortSelect.addEventListener('change', applyFilters);
 
 async function loadSubjects() {
   try {
-    const resp = await fetch('resources.json', { cache: 'no-store' });
+    const resp = await fetch('resources.json?t=' + Date.now(), { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
       subjects = Array.isArray(data.subjects) ? data.subjects : [];
       if (subjects.length === 0) subjects = defaultSubjects;
+      console.log('Loaded subjects:', subjects.length, 'subjects');
+      // Debug: Check if TOC has Decode/Book
+      const toc = subjects.find(s => s.name === 'TOC');
+      if (toc && toc.resources && toc.resources.Endsem) {
+        console.log('TOC Endsem sections:', toc.resources.Endsem.map(r => r.title));
+      }
     } else {
       subjects = defaultSubjects;
     }
   } catch (e) {
+    console.error('Error loading resources:', e);
     subjects = defaultSubjects;
   }
   fillSubjects();
@@ -484,27 +662,6 @@ async function loadSubjects() {
 
 // Initial load
 loadSubjects();
-
-
-// Visitor counter
-function initVisitorCounter() {
-  const counterEl = document.getElementById('visitorCount');
-  if (!counterEl) return;
-  
-  let totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '1247');
-  const lastVisit = localStorage.getItem('lastVisit');
-  const today = new Date().toDateString();
-  
-  if (lastVisit !== today) {
-    totalVisitors++;
-    localStorage.setItem('totalVisitors', totalVisitors);
-    localStorage.setItem('lastVisit', today);
-  }
-  
-  counterEl.textContent = totalVisitors.toLocaleString();
-}
-
-initVisitorCounter();
 
 // Helpers to ensure standard options are always visible
 function normalizeTitle(t){
@@ -520,7 +677,7 @@ function canonicalizeResources(exam, resources){
   });
 
   const wantedInsem = ['Unit 1','Unit 2','Insem Que Paper','Insem Que Paper Solution'];
-  const wantedEndsem = ['Unit 3','Unit 4','Unit 5','Unit 6','Endsem Que Paper','Endsem Que Paper Solution'];
+  const wantedEndsem = ['Unit 3','Unit 4','Unit 5','Unit 6','Endsem Que Paper','Endsem Que Paper Solution','Decode/Book'];
   const wanted = exam === 'Insem' ? wantedInsem : wantedEndsem;
 
   for (const label of wanted){
@@ -556,11 +713,48 @@ function canonicalizeResources(exam, resources){
   return out;
 }
 
-// Shortcut: Shift+Enter opens upload page
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && e.shiftKey) {
-    e.preventDefault();
-    window.location.href = 'upload.html';
+// Preview modal helpers
+function openPreview(title, url) {
+  if (!previewModal || !modalOverlay) return;
+  modalTitle.textContent = title;
+  previewInner.innerHTML = '';
+  let node;
+  if (/\.pdf$/i.test(url)) {
+    node = document.createElement('iframe');
+    node.src = url;
+    node.setAttribute('title', title);
+  } else if (/\.(png|jpg|jpeg|gif)$/i.test(url)) {
+    node = document.createElement('img');
+    node.src = url;
+    node.alt = title;
+  } else {
+    const p = document.createElement('p');
+    p.textContent = 'Preview not supported for this file type.';
+    node = p;
   }
-});
+  previewInner.appendChild(node);
+  modalDownload.href = url;
+  modalOverlay.classList.remove('hidden');
+  previewModal.classList.remove('hidden');
+  modalOverlay.classList.add('active');
+  previewModal.classList.add('active');
+}
+
+function closePreview() {
+  if (!previewModal || !modalOverlay) return;
+  previewModal.classList.remove('active');
+  modalOverlay.classList.remove('active');
+  setTimeout(() => {
+    previewModal.classList.add('hidden');
+    modalOverlay.classList.add('hidden');
+    previewInner.innerHTML = '';
+  }, 250);
+}
+
+// Make closePreview available globally for keyboard shortcut
+window.closePreview = closePreview;
+
+if (modalClose) modalClose.addEventListener('click', closePreview);
+if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closePreview(); });
+
 

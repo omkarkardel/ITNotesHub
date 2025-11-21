@@ -88,6 +88,13 @@ async function findAllByGlobNames(dir, names) {
   return results;
 }
 
+async function fileMeta(absPath) {
+  try {
+    const stat = await fs.stat(absPath);
+    return stat.mtime.toISOString();
+  } catch { return null; }
+}
+
 async function buildUnitGroup(examDir, unitLabel) {
   // Support both 'Unit1' and 'Unit 1'
   const unitDirs = [unitLabel.replace(' ', ''), unitLabel];
@@ -103,10 +110,10 @@ async function buildUnitGroup(examDir, unitLabel) {
 
   const items = [];
   for (const f of hnFiles) {
-    items.push({ title: 'Handwritten Notes - ' + path.parse(f).name, url: toWebPath(f) });
+    items.push({ title: 'Handwritten Notes - ' + path.parse(f).name, url: toWebPath(f), mtime: await fileMeta(f) });
   }
   for (const f of impFiles) {
-    items.push({ title: 'IMP Questions - ' + path.parse(f).name, url: toWebPath(f) });
+    items.push({ title: 'IMP Questions - ' + path.parse(f).name, url: toWebPath(f), mtime: await fileMeta(f) });
   }
   if (items.length === 0) return null;
 
@@ -129,24 +136,20 @@ async function buildSubject(subjectName) {
       const qpFiles = await findAllByGlobNames(examDir, ['insem que paper', 'insem question paper']);
       const solFiles = await findAllByGlobNames(examDir, ['insem que paper solution', 'insem question paper solution']);
       if (qpFiles.length >= 1) {
-        result.resources.Insem.push({
-          type: 'group',
-          title: 'Insem Que Paper',
-          items: qpFiles.map(f => {
-            const base = path.parse(f).name;
-            return { title: stripPrefix(base, 'Insem Que Paper'), url: toWebPath(f) };
-          })
-        });
+        const qpItems = [];
+        for (const f of qpFiles) {
+          const base = path.parse(f).name;
+          qpItems.push({ title: stripPrefix(base, 'Insem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) });
+        }
+        result.resources.Insem.push({ type: 'group', title: 'Insem Que Paper', items: qpItems });
       }
       if (solFiles.length >= 1) {
-        result.resources.Insem.push({
-          type: 'group',
-          title: 'Insem Que Paper Solution',
-          items: solFiles.map(f => {
-            const base = path.parse(f).name;
-            return { title: stripPrefix(base, 'Insem Que Paper Solution'), url: toWebPath(f) };
-          })
-        });
+        const solItems = [];
+        for (const f of solFiles) {
+          const base = path.parse(f).name;
+          solItems.push({ title: stripPrefix(base, 'Insem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) });
+        }
+        result.resources.Insem.push({ type: 'group', title: 'Insem Que Paper Solution', items: solItems });
       }
       for (const u of ['Unit 1', 'Unit 2']) {
         const grp = await buildUnitGroup(examDir, u);
@@ -155,25 +158,30 @@ async function buildSubject(subjectName) {
     } else {
       const qpFiles = await findAllByGlobNames(examDir, ['endsem que paper', 'endsem question paper']);
       const solFiles = await findAllByGlobNames(examDir, ['endsem que paper solution', 'endsem question paper solution']);
+      const decodeFiles = await findAllByGlobNames(examDir, ['decode', 'book']);
       if (qpFiles.length >= 1) {
-        result.resources.Endsem.push({
-          type: 'group',
-          title: 'Endsem Que Paper',
-          items: qpFiles.map(f => {
-            const base = path.parse(f).name;
-            return { title: stripPrefix(base, 'Endsem Que Paper'), url: toWebPath(f) };
-          })
-        });
+        const endQpItems = [];
+        for (const f of qpFiles) {
+          const base = path.parse(f).name;
+          endQpItems.push({ title: stripPrefix(base, 'Endsem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) });
+        }
+        result.resources.Endsem.push({ type:'group', title:'Endsem Que Paper', items:endQpItems });
       }
       if (solFiles.length >= 1) {
-        result.resources.Endsem.push({
-          type: 'group',
-          title: 'Endsem Que Paper Solution',
-          items: solFiles.map(f => {
-            const base = path.parse(f).name;
-            return { title: stripPrefix(base, 'Endsem Que Paper Solution'), url: toWebPath(f) };
-          })
-        });
+        const endSolItems = [];
+        for (const f of solFiles) {
+          const base = path.parse(f).name;
+          endSolItems.push({ title: stripPrefix(base, 'Endsem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) });
+        }
+        result.resources.Endsem.push({ type:'group', title:'Endsem Que Paper Solution', items:endSolItems });
+      }
+      if (decodeFiles.length >= 1) {
+        const decodeItems = [];
+        for (const f of decodeFiles) {
+          const base = path.parse(f).name;
+          decodeItems.push({ title: stripPrefix(base, 'Decode/Book'), url: toWebPath(f), mtime: await fileMeta(f) });
+        }
+        result.resources.Endsem.push({ type:'group', title:'Decode/Book', items:decodeItems });
       }
       for (const u of ['Unit 3', 'Unit 4', 'Unit 5', 'Unit 6']) {
         const grp = await buildUnitGroup(examDir, u);

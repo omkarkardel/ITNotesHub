@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ITNotesHub – Store</title>
+  <meta name="description" content="Premium TE IT study materials, concise revision packs and boosters." />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+</head>
+<body>
+  <header class="site-header sticky-nav glass">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">ITNotesHub</a>
+      <ul class="nav-links">
+        <li><a href="notes.html">Notes</a></li>
+        <li><a href="pyqs_practicals.html">PYQs</a></li>
+        <li><a href="store.html" class="active">Store</a></li>
+        <li><a href="about_contact.html">About & Contact</a></li>
+      </ul>
+      <button id="themeToggle" type="button" class="theme-toggle-btn" aria-label="Toggle light/dark theme">
+        <svg class="icon icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+    <div class="hero-head compact">
+      <h1 class="hero-title">Premium Study Packs</h1>
+      <p class="hero-tagline">Concise revision material & concept boosters (₹50–₹100).</p>
+    </div>
+  </header>
+  <main class="store-main">
+    <section class="product-grid" id="productGrid"></section>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; <span id="year"></span> ITNotesHub</p>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+  <script>
+    const yearSpan=document.getElementById('year'); yearSpan.textContent=new Date().getFullYear();
+    const products=[
+      { id:'revpack1', title:'Insem Quick Revision Pack', desc:'Key formulas, definitions & must-solve patterns.', price:75 },
+      { id:'endsemboost', title:'Endsem Concept Booster', desc:'High-yield summaries for Units 3–6.', price:90 },
+      { id:'pyqfocus', title:'PYQ Focus Set', desc:'Handpicked PYQs + structured answer frames.', price:60 }
+    ];
+    const grid=document.getElementById('productGrid');
+    products.forEach(p=>{
+      const card=document.createElement('article');
+      card.className='product-card glass';
+      card.innerHTML=`<h3>${p.title}</h3><p>${p.desc}</p><div class='price-tag'>₹${p.price}</div>`;
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='small-btn primary'; btn.textContent='Buy Now';
+      btn.addEventListener('click',()=> startCheckout(p));
+      card.appendChild(btn); grid.appendChild(card);
+    });
+
+    function startCheckout(product){
+      alert('Coming soon...');
+    }
+  </script>
+</body>
+</html>
