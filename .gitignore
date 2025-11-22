@@ -4,6 +4,4 @@ node_modules/
 Thumbs.db
 dist/
 tmp/
-files/
-files/*
-!files/.gitkeep
+
