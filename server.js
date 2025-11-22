@@ -1,6 +1,7 @@
 // Local upload server to write files into ./files and rebuild manifest
 // Usage: node server.js
 
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
@@ -10,6 +11,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 const app = express();
+const { getCollection } = require('./db/mongo');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 200 * 1024 * 1024 } });
 const PORT = process.env.PORT || 3000;
 
@@ -63,14 +65,50 @@ app.post('/upload', upload.array('files'), async (req, res) => {
     const dir = path.join(ROOT, ...parts);
     ensureDirSync(dir);
 
+    // Prepare DB collection once per request
+    let filesCol = null;
+    try {
+      filesCol = await getCollection('files');
+    } catch (e) {
+      console.warn('MongoDB not configured or unreachable:', e.message);
+    }
+
+    const savedFiles = [];
     for (const f of req.files){
       const destName = makeDestName(label, type, f.originalname);
       const abs = path.join(dir, destName);
       await writeBufferToFile(abs, f.buffer);
+
+      // Best-effort: store metadata in MongoDB if available
+      if (filesCol){
+        const relPath = path.join(...parts, destName).split(path.sep).join('/');
+        const doc = {
+          subject,
+          exam,
+          label,
+          type: type || null,
+          filename: destName,
+          path: relPath,
+          size: f.size || (f.buffer ? f.buffer.length : null),
+          mimetype: f.mimetype || null,
+          uploadedAt: new Date()
+        };
+        try { await filesCol.insertOne(doc); } catch (e){ console.warn('Insert metadata failed:', e.message); }
+        savedFiles.push(doc);
+      } else {
+        const relPath = path.join(...parts, destName).split(path.sep).join('/');
+        savedFiles.push({
+          subject, exam, label, type: type || null,
+          filename: destName, path: relPath,
+          size: f.size || (f.buffer ? f.buffer.length : null),
+          mimetype: f.mimetype || null,
+          uploadedAt: new Date()
+        });
+      }
     }
 
     const ok = await rebuildManifest();
-    return res.json({ ok, saved: req.files.length });
+    return res.json({ ok, saved: req.files.length, savedFiles });
   } catch (e){
     console.error(e);
     return res.status(500).json({ ok:false, error: e.message });
@@ -102,12 +140,34 @@ app.post('/delete', async (req, res) => {
       return res.status(404).json({ ok:false, error:'File not found' });
     }
     await fsp.unlink(abs);
+
+    // Best-effort: remove metadata if present
+    try {
+      const filesCol = await getCollection('files');
+      await filesCol.deleteOne({ path: url.replace(/\\/g, '/') });
+    } catch (e){ /* ignore if Mongo not configured */ }
     const ok = await rebuildManifest();
     return res.json({ ok, deleted: url });
   } catch (e){
     console.error(e);
     return res.status(500).json({ ok:false, error:e.message });
   }
+});
+
+// Status endpoint to check MongoDB connection
+app.get('/status', async (_req, res) => {
+  const status = { server: 'running', mongodb: 'disconnected', database: null };
+  try {
+    const { getDb } = require('./db/mongo');
+    const db = await getDb();
+    await db.admin().ping();
+    status.mongodb = 'connected';
+    status.database = db.databaseName;
+  } catch (e) {
+    status.mongodb = 'disconnected';
+    status.error = e.message;
+  }
+  res.json(status);
 });
 
 app.listen(PORT, () => {

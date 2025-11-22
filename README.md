@@ -72,7 +72,7 @@ node tools/build_resources_manifest.js
 - Supports both `Unit1` and `Unit 1` folder names.
 - Accepts common file types: pdf, docx, pptx, ppt, xls/xlsx, txt, png/jpg/jpeg, zip.
 - For question papers, it matches names like `Insem Que Paper` (or `Insem Question Paper`) and corresponding `... Solution`.
- - Multiple files per option are supported. They will appear as grouped lists in the UI.
+- Multiple files per option are supported. They will appear as grouped lists in the UI.
 
 ## Customize UI
 - Edit colors and spacing in `styles.css`.
@@ -81,6 +81,59 @@ node tools/build_resources_manifest.js
 ## Notes
 - Links are relative to the project folder. Ensure `index.html` and `files/` are together.
 - If serving over a simple HTTP server, relative links will work the same.
+
+## MongoDB Atlas (Optional)
+- Purpose: store metadata for uploaded files (subject, exam, unit/label, type, path, size, mimetype, timestamp). Existing filesystem storage stays the same.
+
+### Local server + Atlas
+1) Create a MongoDB Atlas cluster and a database user, then copy the connection string.
+2) Create your `.env` from the example and set `MONGODB_URI` (and optional `MONGODB_DB_NAME`):
+
+```powershell
+Copy-Item .env.example .env
+# Edit .env to set MONGODB_URI
+```
+
+3) Install deps and run the local upload server:
+```powershell
+npm install
+$env:PORT=3000; node server.js
+```
+
+4) Upload using `upload.html`. Each upload still writes files to `files/` locally and also writes a metadata record in MongoDB. Delete operations remove the metadata too.
+
+Notes:
+- If `MONGODB_URI` is not set or Atlas is unreachable, uploads still work to the filesystem; DB writes are skipped with a warning.
+- Database name defaults to `ITNotesHub`; override with `MONGODB_DB_NAME`.
+
+### Check MongoDB Connection
+You can verify the MongoDB connection in two ways:
+
+**Option 1: Standalone test script**
+```powershell
+node tools/check-mongo.js
+```
+This will test the connection and display success or error messages.
+
+**Option 2: Status endpoint (when server is running)**
+```powershell
+# Start the server first
+$env:PORT=3000; node server.js
+
+# In a browser or another terminal
+curl http://localhost:3000/status
+# or visit http://localhost:3000/status in your browser
+```
+This returns a JSON status with `mongodb: "connected"` or `"disconnected"` and the database name.
+
+### Serverless metadata (Netlify Functions)
+- Optional: also store metadata via Netlify Functions when deployed.
+- A function `/.netlify/functions/save-meta` inserts metadata documents into MongoDB Atlas.
+- The client attempts to call this after a successful local upload; failures are ignored.
+
+Deployment tips:
+- Set `MONGODB_URI` and (optionally) `MONGODB_DB_NAME` in your Netlify site environment variables.
+- Files themselves are served statically from the repo (`/files/**`); the function only writes metadata.
 
 ## License
 Personal / classroom educational use.

@@ -55,6 +55,22 @@
         if (resp.ok && data && data.ok){
           const msgTail = base.startsWith('/.') ? 'Netlify function' : 'local server';
           log(`Uploaded ${data.saved} file(s) to ${subject}/${exam}/${label} via ${msgTail}.`, 'ok');
+          // If we uploaded via local server and have metadata, try to forward to Netlify function for serverless persistence
+          if (!base.startsWith('/.') && Array.isArray(data.savedFiles) && data.savedFiles.length){
+            try {
+              const metaResp = await fetch('/.netlify/functions/save-meta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ files: data.savedFiles })
+              });
+              const meta = await metaResp.json().catch(() => ({}));
+              if (metaResp.ok && meta.ok){
+                log(`Saved ${meta.inserted || data.savedFiles.length} metadata record(s) to Atlas.`, 'ok');
+              } else {
+                log('Metadata save (serverless) failed; skipping.', 'warn');
+              }
+            } catch (_e) { /* ignore serverless meta errors */ }
+          }
           return true;
         }
       } catch (e){ /* try next base */ }
