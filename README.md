@@ -1,7 +1,8 @@
 # ITNotesHub Website
 
 ## Live Demo
-[View the live site]([https://your-live-site-link.netlify.app](https://itnoteshub.netlify.app/))
+[View the live site]
+(https://itnoteshub.netlify.app/)
 A simple static website for TE students to browse subject resources. Built with HTML, CSS, and JavaScript (no framework).
 
 ## Current Features
