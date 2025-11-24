@@ -3,6 +3,7 @@
 ## Live Demo
 [View the live site]
 (https://itnoteshub.netlify.app/)
+
 A simple static website for TE students to browse subject resources. Built with HTML, CSS, and JavaScript (no framework).
 
 ## Current Features
