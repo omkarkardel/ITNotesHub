@@ -1,4 +1,4 @@
-# TE Class Notes Website
+# ITNotesHub Website
 A simple static website for TE students to browse subject resources. Built with HTML, CSS, and JavaScript (no framework).
 
 ## Current Features
