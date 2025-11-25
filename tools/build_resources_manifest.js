@@ -158,6 +158,12 @@ async function buildSubject(subjectName) {
     } else {
       const qpFiles = await findAllByGlobNames(examDir, ['endsem que paper', 'endsem question paper']);
       const solFiles = await findAllByGlobNames(examDir, ['endsem que paper solution', 'endsem question paper solution']);
+      // Also scan Solution subfolder for Que Paper Solution files
+      const solutionDir = path.join(examDir, 'Solution');
+      let solutionFiles = [];
+      if (await pathExists(solutionDir)) {
+        solutionFiles = await findAllByGlobNames(solutionDir, ['que paper solution', 'question paper solution']);
+      }
       const decodeFiles = await findAllByGlobNames(examDir, ['decode', 'book']);
       if (qpFiles.length >= 1) {
         const endQpItems = [];
@@ -167,9 +173,11 @@ async function buildSubject(subjectName) {
         }
         result.resources.Endsem.push({ type:'group', title:'Endsem Que Paper', items:endQpItems });
       }
-      if (solFiles.length >= 1) {
+      // Combine solution files from main folder and Solution subfolder
+      const allSolFiles = [...solFiles, ...solutionFiles];
+      if (allSolFiles.length >= 1) {
         const endSolItems = [];
-        for (const f of solFiles) {
+        for (const f of allSolFiles) {
           const base = path.parse(f).name;
           endSolItems.push({ title: stripPrefix(base, 'Endsem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) });
         }

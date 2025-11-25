@@ -30,6 +30,39 @@
                 "mtime": "2025-11-24T03:36:56.582Z"
               }
             ]
+          },
+          {
+            "type": "group",
+            "title": "Unit 3",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - Unil-3 adbms",
+                "url": "files/ADBMS/Endsem/Unit3/Handwritten Notes - Unil-3 adbms.pdf",
+                "mtime": "2025-11-25T15:24:41.754Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Unit 4",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - Unit 4 adbms",
+                "url": "files/ADBMS/Endsem/Unit4/Handwritten Notes - Unit 4 adbms.pdf",
+                "mtime": "2025-11-25T15:24:50.271Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Unit 6",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - Unit 6 Adbms",
+                "url": "files/ADBMS/Endsem/Unit6/Handwritten Notes - Unit 6 Adbms.pdf",
+                "mtime": "2025-11-25T15:25:09.274Z"
+              }
+            ]
           }
         ]
       }
@@ -132,6 +165,17 @@
           },
           {
             "type": "group",
+            "title": "Endsem Que Paper Solution",
+            "items": [
+              {
+                "title": "Que Paper Solution - ML_Nov-Dec_23_Que_Solution",
+                "url": "files/ML/Endsem/Solution/Que Paper Solution - ML_Nov-Dec_23_Que_Solution.pdf",
+                "mtime": "2025-11-25T15:57:14.435Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
             "title": "Decode/Book",
             "items": [
               {
@@ -143,6 +187,17 @@
                 "title": "ML_Decode",
                 "url": "files/ML/Endsem/ML_Decode.pdf",
                 "mtime": "2025-11-24T03:40:58.932Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Unit 3",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - ML_U3notes",
+                "url": "files/ML/Endsem/Unit3/Handwritten Notes - ML_U3notes.pdf",
+                "mtime": "2025-11-25T15:24:16.031Z"
               }
             ]
           }
@@ -203,6 +258,17 @@
                 "title": "OS_Decode",
                 "url": "files/OS/Endsem/OS_Decode.pdf",
                 "mtime": "2025-11-24T03:41:18.084Z"
+              }
+            ]
+          },
+          {
+            "type": "group",
+            "title": "Unit 6",
+            "items": [
+              {
+                "title": "Handwritten Notes - Handwritten Notes - OS- unit 6 Notes",
+                "url": "files/OS/Endsem/Unit6/Handwritten Notes - OS- unit 6 Notes.pdf",
+                "mtime": "2025-11-25T15:26:18.113Z"
               }
             ]
           }
