@@ -28,7 +28,8 @@ function ensureDirSync(dir) {
 
 function makeDestName(label, type, originalName){
   let prefix = '';
-  if (label.includes('Que Paper')) prefix = label + ' - ';
+  if (label.includes('Que Paper Solution')) prefix = 'Que Paper Solution - ';
+  else if (label.includes('Que Paper')) prefix = 'Que Paper - ';
   else if (label.startsWith('Unit')){
     prefix = (type === 'handwritten' ? 'Handwritten Notes - ' : 'IMP Questions - ');
   }
@@ -39,7 +40,11 @@ function makeDestName(label, type, originalName){
 
 function computeTargetParts(subject, exam, label){
   const parts = ['files', subject, exam];
-  if (label.startsWith('Unit')) parts.push(label.replace(' ', ''));
+  if (label.includes('Que Paper Solution')) {
+    parts.push('Solution');
+  } else if (label.startsWith('Unit')) {
+    parts.push(label.replace(' ', ''));
+  }
   return parts;
 }
 

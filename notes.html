@@ -9,6 +9,11 @@
 </head>
 <body onkeydown="if(event.key==='Enter' && event.shiftKey){event.preventDefault(); window.location.href='upload.html';}">
   <header class="site-header sticky-nav glass">
+    <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <nav class="top-nav">
       <a href="index.html" class="brand">ITNotesHub</a>
       <ul class="nav-links">
@@ -68,6 +73,20 @@
       </label>
     </div>
   </header>
+  <div id="drawerOverlay" class="drawer-overlay"></div>
+  <aside id="mobileDrawer" class="mobile-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2>ITNotesHub</h2>
+      <button id="closeDrawer" class="close-drawer" aria-label="Close menu">×</button>
+    </div>
+    <ul class="drawer-menu">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="notes.html" class="drawer-link active">Notes</a></li>
+      <li><a href="pyqs_practicals.html" class="drawer-link">PYQs</a></li>
+      <li><a href="store.html" class="drawer-link">Store</a></li>
+      <li><a href="about_contact.html" class="drawer-link">About & Contact</a></li>
+    </ul>
+  </aside>
 
   <main id="notesContainer" class="notes"></main>
 
@@ -96,6 +115,7 @@
     </div>
   </footer>
 
+  <script src="nav.js"></script>
   <script src="theme.js"></script>
   <script>
     // Shift+Enter shortcut for upload
