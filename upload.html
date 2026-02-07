@@ -44,20 +44,27 @@
     <div class="panel">
       <div class="row">
         <label>
+          <span>Year:</span>
+          <select id="yearSelect">
+            <option value="">Select Year</option>
+          </select>
+        </label>
+        <label>
+          <span>Semester:</span>
+          <select id="semesterSelect" disabled>
+            <option value="">Select Semester</option>
+          </select>
+        </label>
+        <label>
           <span>Subject:</span>
           <select id="subjectSelect" disabled>
-            <option value="">Select</option>
-            <option>TOC</option>
-            <option>HCI</option>
-            <option>ML</option>
-            <option>OS</option>
-            <option>ADBMS</option>
+            <option value="">Select Subject</option>
           </select>
         </label>
         <button id="buildManifest" class="btn" disabled>Upload</button>
       </div>
 
-      <div id="sections" class="sections" aria-live="polite">
+      <div id="sections" class="sections" aria-live="polite" style="display:none;">
         <div class="column" data-exam="Insem">
           <h2>Insem</h2>
           <div class="section" data-section="Unit1" data-need-type="true">

@@ -70,263 +70,115 @@
   }, true);
 })();
 
-// Data: structured by subject (fallback if no manifest is present)
-const defaultSubjects = [
+// Data: structured by year and subject (fallback if no manifest is present)
+const defaultYears = [
   {
-    name: 'TOC',
-    resources: {
-      Insem: [
-        { type: 'link', title: 'Insem Que Paper', url: '#' },
-        { type: 'link', title: 'Insem Que Paper Solution', url: '#' },
-        { 
-          type: 'group', title: 'Unit 1', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 2', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ],
-      Endsem: [
-        { type: 'link', title: 'Endsem Que Paper', url: '#' },
-        { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
-        { type: 'link', title: 'Decode/Book', url: '#' },
-        { 
-          type: 'group', title: 'Unit 3', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 4', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 5', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 6', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ]
-    }
+    name: 'F.E',
+    semesters: [
+      {
+        name: 'Sem 1',
+        subjects: [
+          { name: 'Engineering Math1', resources: { Insem: [], Endsem: [] } },
+          { name: 'PPS', resources: { Insem: [], Endsem: [] } },
+          { name: 'Engg Physics', resources: { Insem: [], Endsem: [] } },
+          { name: 'BEE', resources: { Insem: [], Endsem: [] } },
+          { name: 'SME', resources: { Insem: [], Endsem: [] } }
+        ]
+      },
+      {
+        name: 'Sem 2',
+        subjects: [
+          { name: 'Enggn Math2', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Chemistry', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Mechanics', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Graphics', resources: { Insem: [], Endsem: [] } },
+          { name: 'BXE', resources: { Insem: [], Endsem: [] } }
+        ]
+      }
+    ]
   },
   {
-    name: 'HCI',
-    resources: {
-      Insem: [
-        { type: 'link', title: 'Insem Que Paper', url: '#' },
-        { type: 'link', title: 'Insem Que Paper Solution', url: '#' },
-        { 
-          type: 'group', title: 'Unit 1', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 2', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ],
-      Endsem: [
-        { type: 'link', title: 'Endsem Que Paper', url: '#' },
-        { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
-        { type: 'link', title: 'Decode/Book', url: '#' },
-        { 
-          type: 'group', title: 'Unit 3', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 4', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 5', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 6', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ]
-    }
+    name: 'S.E',
+    semesters: [
+      {
+        name: 'Sem 3',
+        subjects: [
+          { name: 'DSA', resources: { Insem: [], Endsem: [] } },
+          { name: 'OOP', resources: { Insem: [], Endsem: [] } },
+          { name: 'BCN', resources: { Insem: [], Endsem: [] } },
+          { name: 'DM', resources: { Insem: [], Endsem: [] } },
+          { name: 'LDCO', resources: { Insem: [], Endsem: [] } }
+        ]
+      },
+      {
+        name: 'Sem 4',
+        subjects: [
+          { name: 'Enggn Math3', resources: { Insem: [], Endsem: [] } },
+          { name: 'DBMS', resources: { Insem: [], Endsem: [] } },
+          { name: 'CG', resources: { Insem: [], Endsem: [] } },
+          { name: 'PA', resources: { Insem: [], Endsem: [] } },
+          { name: 'SE', resources: { Insem: [], Endsem: [] } }
+        ]
+      }
+    ]
   },
   {
-    name: 'ML',
-    resources: {
-      Insem: [
-        { type: 'link', title: 'Insem Que Paper', url: '#' },
-        { type: 'link', title: 'Insem Que Paper Solution', url: '#' },
-        { 
-          type: 'group', title: 'Unit 1', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 2', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ],
-      Endsem: [
-        { type: 'link', title: 'Endsem Que Paper', url: '#' },
-        { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
-        { type: 'link', title: 'Decode/Book', url: '#' },
-        { 
-          type: 'group', title: 'Unit 3', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 4', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 5', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 6', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ]
-    }
+    name: 'T.E',
+    semesters: [
+      {
+        name: 'Sem 5',
+        subjects: [
+          { name: 'TOC', resources: { Insem: [], Endsem: [] } },
+          { name: 'HCI', resources: { Insem: [], Endsem: [] } },
+          { name: 'ML', resources: { Insem: [], Endsem: [] } },
+          { name: 'ADBMS', resources: { Insem: [], Endsem: [] } },
+          { name: 'OS', resources: { Insem: [], Endsem: [] } }
+        ]
+      },
+      {
+        name: 'Sem 6',
+        subjects: [
+          { name: 'WAD', resources: { Insem: [], Endsem: [] } },
+          { name: 'CyberSecurity', resources: { Insem: [], Endsem: [] } },
+          { name: 'CNS', resources: { Insem: [], Endsem: [] } },
+          { name: 'DSBDA', resources: { Insem: [], Endsem: [] } },
+          { name: 'Internship', resources: { Insem: [], Endsem: [] } }
+        ]
+      }
+    ]
   },
   {
-    name: 'OS',
-    resources: {
-      Insem: [
-        { type: 'link', title: 'Insem Que Paper', url: '#' },
-        { type: 'link', title: 'Insem Que Paper Solution', url: '#' },
-        { 
-          type: 'group', title: 'Unit 1', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 2', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ],
-      Endsem: [
-        { type: 'link', title: 'Endsem Que Paper', url: '#' },
-        { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
-        { type: 'link', title: 'Decode/Book', url: '#' },
-        { 
-          type: 'group', title: 'Unit 3', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 4', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 5', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 6', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    name: 'ADBMS',
-    resources: {
-      Insem: [
-        { type: 'link', title: 'Insem Que Paper', url: '#' },
-        { type: 'link', title: 'Insem Que Paper Solution', url: '#' },
-        { 
-          type: 'group', title: 'Unit 1', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 2', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ],
-      Endsem: [
-        { type: 'link', title: 'Endsem Que Paper', url: '#' },
-        { type: 'link', title: 'Endsem Que Paper Solution', url: '#' },
-        { type: 'link', title: 'Decode/Book', url: '#' },
-        { 
-          type: 'group', title: 'Unit 3', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 4', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 5', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        },
-        { 
-          type: 'group', title: 'Unit 6', items: [
-            { title: 'Handwritten Notes', url: '#' },
-            { title: 'IMP Questions', url: '#' }
-          ]
-        }
-      ]
-    }
+    name: 'B.E',
+    semesters: [
+      {
+        name: 'Sem 7',
+        subjects: [
+          { name: 'ISR', resources: { Insem: [], Endsem: [] } },
+          { name: 'SPM', resources: { Insem: [], Endsem: [] } },
+          { name: 'Deep Learning', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-3', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-4', resources: { Insem: [], Endsem: [] } }
+        ]
+      },
+      {
+        name: 'Sem 8',
+        subjects: [
+          { name: 'DS', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-5', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-6', resources: { Insem: [], Endsem: [] } }
+        ]
+      }
+    ]
   }
 ];
 
-// Will be populated from resources.json if present; otherwise uses defaultSubjects
-let subjects = [];
+// Will be populated from resources.json if present; otherwise uses defaultYears
+let years = [];
+let semesters = []; // Current semesters based on selected year
+let subjects = []; // Current subjects based on selected semester
 
+const yearFilter = document.getElementById('yearFilter');
+const semesterFilter = document.getElementById('semesterFilter');
 const subjectFilter = document.getElementById('subjectFilter');
 const examFilter = document.getElementById('examFilter');
 const searchInput = document.getElementById('searchInput');
@@ -369,6 +221,34 @@ if (mobileMenuBtn && mobileDrawer) {
   
   closeDrawer.addEventListener('click', closeMenu);
   drawerOverlay.addEventListener('click', closeMenu);
+}
+
+// Populate year filter dynamically
+function fillYears() {
+  // Remove existing options except the first 'All'
+  while (yearFilter.options.length > 1) {
+    yearFilter.remove(1);
+  }
+  years.forEach(yr => {
+    const opt = document.createElement('option');
+    opt.value = yr.name;
+    opt.textContent = yr.name;
+    yearFilter.appendChild(opt);
+  });
+}
+
+// Populate semester filter dynamically
+function fillSemesters() {
+  // Remove existing options except the first 'All'
+  while (semesterFilter.options.length > 1) {
+    semesterFilter.remove(1);
+  }
+  semesters.forEach(sem => {
+    const opt = document.createElement('option');
+    opt.value = sem.name;
+    opt.textContent = sem.name;
+    semesterFilter.appendChild(opt);
+  });
 }
 
 // Populate subject filter dynamically
@@ -636,32 +516,65 @@ examFilter.addEventListener('change', applyFilters);
 if (searchInput) searchInput.addEventListener('input', () => applyFilters());
 if (sortSelect) sortSelect.addEventListener('change', applyFilters);
 
-async function loadSubjects() {
+async function loadYears() {
   try {
     const resp = await fetch('resources.json?t=' + Date.now(), { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
-      subjects = Array.isArray(data.subjects) ? data.subjects : [];
-      if (subjects.length === 0) subjects = defaultSubjects;
-      console.log('Loaded subjects:', subjects.length, 'subjects');
-      // Debug: Check if TOC has Decode/Book
-      const toc = subjects.find(s => s.name === 'TOC');
-      if (toc && toc.resources && toc.resources.Endsem) {
-        console.log('TOC Endsem sections:', toc.resources.Endsem.map(r => r.title));
-      }
+      years = Array.isArray(data.years) ? data.years : [];
+      if (years.length === 0) years = defaultYears;
+      console.log('Loaded years:', years.length, 'years');
     } else {
-      subjects = defaultSubjects;
+      years = defaultYears;
     }
   } catch (e) {
     console.error('Error loading resources:', e);
-    subjects = defaultSubjects;
+    years = defaultYears;
   }
+  fillYears();
+  // Set initial to T.E
+  const initialYear = years.find(y => y.name === 'T.E') || years[0];
+  semesters = initialYear ? initialYear.semesters : [];
+  fillSemesters();
+  // Set initial to Sem 5
+  const initialSemester = semesters.find(s => s.name === 'Sem 5') || semesters[0];
+  subjects = initialSemester ? initialSemester.subjects : [];
   fillSubjects();
   applyFilters();
 }
 
+// Event listener for year filter change
+yearFilter.addEventListener('change', () => {
+  const selectedYear = yearFilter.value;
+  if (selectedYear === 'all') {
+    semesters = [];
+    subjects = [];
+  } else {
+    const year = years.find(y => y.name === selectedYear);
+    semesters = year ? year.semesters : [];
+  }
+  fillSemesters();
+  // Reset subject filter
+  subjects = [];
+  fillSubjects();
+  applyFilters();
+});
+
+// Event listener for semester filter change
+semesterFilter.addEventListener('change', () => {
+  const selectedSemester = semesterFilter.value;
+  if (selectedSemester === 'all') {
+    subjects = [];
+  } else {
+    const semester = semesters.find(s => s.name === selectedSemester);
+    subjects = semester ? semester.subjects : [];
+  }
+  fillSubjects();
+  applyFilters();
+});
+
 // Initial load
-loadSubjects();
+loadYears();
 
 // Helpers to ensure standard options are always visible
 function normalizeTitle(t){
@@ -696,8 +609,10 @@ function canonicalizeResources(exam, resources){
       }
       const hasHN = group.items.some(i => /handwritten/i.test(i.title));
       const hasIMP = group.items.some(i => /imp\s*questions|important\s*questions/i.test(i.title));
+      const hasBook = group.items.some(i => /book|decode/i.test(i.title));
       if (!hasHN) group.items.push({ title: 'Handwritten Notes — none', placeholder: true });
       if (!hasIMP) group.items.push({ title: 'IMP Questions — none', placeholder: true });
+      if (!hasBook) group.items.push({ title: 'Book/Decode — none', placeholder: true });
       out.push(group);
     } else {
       // Question papers and solutions
@@ -756,5 +671,3 @@ window.closePreview = closePreview;
 
 if (modalClose) modalClose.addEventListener('click', closePreview);
 if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closePreview(); });
-
-
