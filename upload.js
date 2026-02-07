@@ -133,16 +133,29 @@ async function loadYears() {
       const data = await resp.json();
       years = Array.isArray(data.years) ? data.years : defaultYears;
       fillYears();
+      populateAllSubjects();
     } else {
       log('Failed to load resources.json, using defaults', 'warn');
       years = defaultYears;
       fillYears();
+      populateAllSubjects();
     }
   } catch (e) {
     log('Error loading resources: ' + e.message + ', using defaults', 'warn');
     years = defaultYears;
     fillYears();
+    populateAllSubjects();
   }
+}
+
+function populateAllSubjects() {
+  subjects = defaultYears.flatMap(y => y.semesters.flatMap(s => s.subjects));
+  fillSubjects();
+  subjectSelect.disabled = false;
+}
+
+function getYearFromDefaults(name) {
+  return defaultYears.find(y => y.name === name);
 }
 
   function fillYears() {

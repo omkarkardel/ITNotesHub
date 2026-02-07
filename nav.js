@@ -12,6 +12,7 @@
     btn.setAttribute('aria-expanded', 'true');
     drawer.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    btn.classList.add('open');
   };
 
   const closeMenu = () => {
@@ -20,6 +21,7 @@
     btn.setAttribute('aria-expanded', 'false');
     drawer.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    btn.classList.remove('open');
   };
 
   btn.addEventListener('click', openMenu);
