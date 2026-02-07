@@ -77,23 +77,11 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 1',
-        subjects: [
-          { name: 'Engineering Math1', resources: { Insem: [], Endsem: [] } },
-          { name: 'PPS', resources: { Insem: [], Endsem: [] } },
-          { name: 'Engg Physics', resources: { Insem: [], Endsem: [] } },
-          { name: 'BEE', resources: { Insem: [], Endsem: [] } },
-          { name: 'SME', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       },
       {
         name: 'Sem 2',
-        subjects: [
-          { name: 'Enggn Math2', resources: { Insem: [], Endsem: [] } },
-          { name: 'Enggn Chemistry', resources: { Insem: [], Endsem: [] } },
-          { name: 'Enggn Mechanics', resources: { Insem: [], Endsem: [] } },
-          { name: 'Enggn Graphics', resources: { Insem: [], Endsem: [] } },
-          { name: 'BXE', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       }
     ]
   },
@@ -102,23 +90,11 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 3',
-        subjects: [
-          { name: 'DSA', resources: { Insem: [], Endsem: [] } },
-          { name: 'OOP', resources: { Insem: [], Endsem: [] } },
-          { name: 'BCN', resources: { Insem: [], Endsem: [] } },
-          { name: 'DM', resources: { Insem: [], Endsem: [] } },
-          { name: 'LDCO', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       },
       {
         name: 'Sem 4',
-        subjects: [
-          { name: 'Enggn Math3', resources: { Insem: [], Endsem: [] } },
-          { name: 'DBMS', resources: { Insem: [], Endsem: [] } },
-          { name: 'CG', resources: { Insem: [], Endsem: [] } },
-          { name: 'PA', resources: { Insem: [], Endsem: [] } },
-          { name: 'SE', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       }
     ]
   },
@@ -137,13 +113,7 @@ const defaultYears = [
       },
       {
         name: 'Sem 6',
-        subjects: [
-          { name: 'WAD', resources: { Insem: [], Endsem: [] } },
-          { name: 'CyberSecurity', resources: { Insem: [], Endsem: [] } },
-          { name: 'CNS', resources: { Insem: [], Endsem: [] } },
-          { name: 'DSBDA', resources: { Insem: [], Endsem: [] } },
-          { name: 'Internship', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       }
     ]
   },
@@ -152,21 +122,11 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 7',
-        subjects: [
-          { name: 'ISR', resources: { Insem: [], Endsem: [] } },
-          { name: 'SPM', resources: { Insem: [], Endsem: [] } },
-          { name: 'Deep Learning', resources: { Insem: [], Endsem: [] } },
-          { name: 'Elective-3', resources: { Insem: [], Endsem: [] } },
-          { name: 'Elective-4', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       },
       {
         name: 'Sem 8',
-        subjects: [
-          { name: 'DS', resources: { Insem: [], Endsem: [] } },
-          { name: 'Elective-5', resources: { Insem: [], Endsem: [] } },
-          { name: 'Elective-6', resources: { Insem: [], Endsem: [] } }
-        ]
+        subjects: []
       }
     ]
   }
@@ -534,12 +494,16 @@ async function loadYears() {
   fillYears();
   // Set initial to T.E
   const initialYear = years.find(y => y.name === 'T.E') || years[0];
-  semesters = initialYear ? initialYear.semesters : [];
-  fillSemesters();
+  yearFilter.value = initialYear.name;
+  // Trigger change to populate semesters
+  yearFilter.dispatchEvent(new Event('change'));
   // Set initial to Sem 5
   const initialSemester = semesters.find(s => s.name === 'Sem 5') || semesters[0];
-  subjects = initialSemester ? initialSemester.subjects : [];
-  fillSubjects();
+  semesterFilter.value = initialSemester.name;
+  // Trigger change to populate subjects
+  semesterFilter.dispatchEvent(new Event('change'));
+  // Set subject
+  subjectFilter.value = subjects.length > 0 ? subjects[0].name : 'all';
   applyFilters();
 }
 

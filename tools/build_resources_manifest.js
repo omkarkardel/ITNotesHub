@@ -207,11 +207,18 @@ async function main() {
     process.exit(1);
   }
   const subjectNames = await listDirs(FILES_DIR);
-  const results = [];
+  const subjects = [];
   for (const s of subjectNames) {
-    results.push(await buildSubject(s));
+    subjects.push(await buildSubject(s));
   }
-  const payload = { subjects: results };
+  // Group subjects under years (hardcoded for now: T.E has subjects, others empty)
+  const years = [
+    { name: 'F.E', semesters: [ { name: 'Sem 1', subjects: [] }, { name: 'Sem 2', subjects: [] } ] },
+    { name: 'S.E', semesters: [ { name: 'Sem 3', subjects: [] }, { name: 'Sem 4', subjects: [] } ] },
+    { name: 'T.E', semesters: [ { name: 'Sem 5', subjects: subjects }, { name: 'Sem 6', subjects: [] } ] },
+    { name: 'B.E', semesters: [ { name: 'Sem 7', subjects: [] }, { name: 'Sem 8', subjects: [] } ] }
+  ];
+  const payload = { years: years };
   await fs.writeFile(OUT_FILE, JSON.stringify(payload, null, 2), 'utf8');
   console.log(`Wrote manifest: ${OUT_FILE}`);
 }
