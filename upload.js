@@ -103,7 +103,7 @@ const defaultYears = [
 ];
 
 (async function(){
-  const API_BASES = ['/.netlify/functions', 'http://localhost:3000'];
+  const API_BASES = ['', 'http://localhost:3000', '/.netlify/functions'];
   const buildManifestBtn = document.getElementById('buildManifest');
   const filePicker = document.getElementById('filePicker');
   const logEl = document.getElementById('log');
@@ -116,6 +116,51 @@ let years = [];
 let semesters = [];
 let subjects = [];
 let pendingSection = null; // which section triggered file selection
+
+function ensureFullSubjectStructure(sourceYears, templateYears) {
+  const clone = JSON.parse(JSON.stringify(sourceYears || []));
+  const yearMap = new Map(clone.map(y => [y.name, y]));
+
+  templateYears.forEach(templateYear => {
+    let targetYear = yearMap.get(templateYear.name);
+    if (!targetYear) {
+      targetYear = { name: templateYear.name, semesters: [] };
+      clone.push(targetYear);
+      yearMap.set(templateYear.name, targetYear);
+    }
+    if (!Array.isArray(targetYear.semesters)) targetYear.semesters = [];
+
+    const semMap = new Map(targetYear.semesters.map(s => [s.name, s]));
+    templateYear.semesters.forEach(templateSem => {
+      let targetSem = semMap.get(templateSem.name);
+      if (!targetSem) {
+        targetSem = { name: templateSem.name, subjects: [] };
+        targetYear.semesters.push(targetSem);
+        semMap.set(templateSem.name, targetSem);
+      }
+      if (!Array.isArray(targetSem.subjects)) targetSem.subjects = [];
+
+      const subMap = new Map(targetSem.subjects.map(sub => [sub.name, sub]));
+      templateSem.subjects.forEach(templateSub => {
+        const existing = subMap.get(templateSub.name);
+        if (!existing) {
+          targetSem.subjects.push({
+            name: templateSub.name,
+            resources: { Insem: [], Endsem: [] }
+          });
+          return;
+        }
+        if (!existing.resources || typeof existing.resources !== 'object') {
+          existing.resources = { Insem: [], Endsem: [] };
+        }
+        if (!Array.isArray(existing.resources.Insem)) existing.resources.Insem = [];
+        if (!Array.isArray(existing.resources.Endsem)) existing.resources.Endsem = [];
+      });
+    });
+  });
+
+  return clone;
+}
 
 function log(msg, cls){
   const p = document.createElement('div');
@@ -131,7 +176,8 @@ async function loadYears() {
     const resp = await fetch('resources.json?t=' + Date.now(), { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
-      years = Array.isArray(data.years) ? data.years : defaultYears;
+      const loadedYears = Array.isArray(data.years) ? data.years : defaultYears;
+      years = ensureFullSubjectStructure(loadedYears, defaultYears);
       fillYears();
       populateAllSubjects();
     } else {
@@ -194,6 +240,8 @@ function getYearFromDefaults(name) {
     if (selectedYear === '') {
       semesters = [];
       subjects = [];
+      fillSemesters();
+      fillSubjects();
       semesterSelect.disabled = true;
       subjectSelect.disabled = true;
     } else {
@@ -202,6 +250,7 @@ function getYearFromDefaults(name) {
       fillSemesters();
       semesterSelect.disabled = false;
       subjects = [];
+      fillSubjects();
       subjectSelect.disabled = true;
     }
   });
@@ -258,20 +307,28 @@ function getYearFromDefaults(name) {
     const type = getTypeForSection(sectionEl);
     if (type) fd.append('type', type);
     for (const f of files) fd.append('files', f, f.name);
+    const failures = [];
     for (const base of API_BASES){
+      const url = base ? (base.endsWith('/upload') ? base : base + '/upload') : '/upload';
       try {
-        const url = base.endsWith('/upload') ? base : base + '/upload';
         const resp = await fetch(url, { method: 'POST', body: fd });
         const data = await resp.json().catch(() => ({}));
         if (resp.ok && data && data.ok){
-          const msgTail = base.startsWith('/.') ? 'Netlify function' : 'local server';
+          const msgTail = base.startsWith('/.')
+            ? 'Netlify function'
+            : (base ? 'local server' : 'same-origin server');
           log(`Uploaded ${data.saved} file(s) to ${subject}/${exam}/${label} via ${msgTail}.`, 'ok');
           // Note: No database used; metadata stored in files only
           return true;
         }
-      } catch (e){ /* try next base */ }
+        failures.push(`${url} -> HTTP ${resp.status}`);
+      } catch (e){
+        failures.push(`${url} -> ${e.message}`);
+      }
     }
-    log('Upload failed: no backend reachable (Netlify function or local server).', 'err');
+    log('Upload failed: no backend reachable.', 'err');
+    log('Start backend: run "npm install" then "npm start", and open http://localhost:3000/upload.html', 'warn');
+    if (failures.length) log('Tried: ' + failures.join(' | '), 'warn');
     return false;
   }
 

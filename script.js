@@ -77,11 +77,23 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 1',
-        subjects: []
+        subjects: [
+          { name: 'Engineering Math1', resources: { Insem: [], Endsem: [] } },
+          { name: 'PPS', resources: { Insem: [], Endsem: [] } },
+          { name: 'Engg Physics', resources: { Insem: [], Endsem: [] } },
+          { name: 'BEE', resources: { Insem: [], Endsem: [] } },
+          { name: 'SME', resources: { Insem: [], Endsem: [] } }
+        ]
       },
       {
         name: 'Sem 2',
-        subjects: []
+        subjects: [
+          { name: 'Enggn Math2', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Chemistry', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Mechanics', resources: { Insem: [], Endsem: [] } },
+          { name: 'Enggn Graphics', resources: { Insem: [], Endsem: [] } },
+          { name: 'BXE', resources: { Insem: [], Endsem: [] } }
+        ]
       }
     ]
   },
@@ -90,11 +102,23 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 3',
-        subjects: []
+        subjects: [
+          { name: 'DSA', resources: { Insem: [], Endsem: [] } },
+          { name: 'OOP', resources: { Insem: [], Endsem: [] } },
+          { name: 'BCN', resources: { Insem: [], Endsem: [] } },
+          { name: 'DM', resources: { Insem: [], Endsem: [] } },
+          { name: 'LDCO', resources: { Insem: [], Endsem: [] } }
+        ]
       },
       {
         name: 'Sem 4',
-        subjects: []
+        subjects: [
+          { name: 'Enggn Math3', resources: { Insem: [], Endsem: [] } },
+          { name: 'DBMS', resources: { Insem: [], Endsem: [] } },
+          { name: 'CG', resources: { Insem: [], Endsem: [] } },
+          { name: 'PA', resources: { Insem: [], Endsem: [] } },
+          { name: 'SE', resources: { Insem: [], Endsem: [] } }
+        ]
       }
     ]
   },
@@ -113,7 +137,13 @@ const defaultYears = [
       },
       {
         name: 'Sem 6',
-        subjects: []
+        subjects: [
+          { name: 'WAD', resources: { Insem: [], Endsem: [] } },
+          { name: 'CyberSecurity', resources: { Insem: [], Endsem: [] } },
+          { name: 'CNS', resources: { Insem: [], Endsem: [] } },
+          { name: 'DSBDA', resources: { Insem: [], Endsem: [] } },
+          { name: 'Internship', resources: { Insem: [], Endsem: [] } }
+        ]
       }
     ]
   },
@@ -122,15 +152,70 @@ const defaultYears = [
     semesters: [
       {
         name: 'Sem 7',
-        subjects: []
+        subjects: [
+          { name: 'ISR', resources: { Insem: [], Endsem: [] } },
+          { name: 'SPM', resources: { Insem: [], Endsem: [] } },
+          { name: 'Deep Learning', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-3', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-4', resources: { Insem: [], Endsem: [] } }
+        ]
       },
       {
         name: 'Sem 8',
-        subjects: []
+        subjects: [
+          { name: 'DS', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-5', resources: { Insem: [], Endsem: [] } },
+          { name: 'Elective-6', resources: { Insem: [], Endsem: [] } }
+        ]
       }
     ]
   }
 ];
+
+function ensureFullSubjectStructure(sourceYears, templateYears) {
+  const clone = JSON.parse(JSON.stringify(sourceYears || []));
+  const yearMap = new Map(clone.map(y => [y.name, y]));
+
+  templateYears.forEach(templateYear => {
+    let targetYear = yearMap.get(templateYear.name);
+    if (!targetYear) {
+      targetYear = { name: templateYear.name, semesters: [] };
+      clone.push(targetYear);
+      yearMap.set(templateYear.name, targetYear);
+    }
+    if (!Array.isArray(targetYear.semesters)) targetYear.semesters = [];
+
+    const semMap = new Map(targetYear.semesters.map(s => [s.name, s]));
+    templateYear.semesters.forEach(templateSem => {
+      let targetSem = semMap.get(templateSem.name);
+      if (!targetSem) {
+        targetSem = { name: templateSem.name, subjects: [] };
+        targetYear.semesters.push(targetSem);
+        semMap.set(templateSem.name, targetSem);
+      }
+      if (!Array.isArray(targetSem.subjects)) targetSem.subjects = [];
+
+      const subMap = new Map(targetSem.subjects.map(sub => [sub.name, sub]));
+      templateSem.subjects.forEach(templateSub => {
+        const existing = subMap.get(templateSub.name);
+        if (!existing) {
+          targetSem.subjects.push({
+            name: templateSub.name,
+            resources: { Insem: [], Endsem: [] }
+          });
+          return;
+        }
+        if (!existing.resources || typeof existing.resources !== 'object') {
+          existing.resources = { Insem: [], Endsem: [] };
+        }
+        if (!Array.isArray(existing.resources.Insem)) existing.resources.Insem = [];
+        if (!Array.isArray(existing.resources.Endsem)) existing.resources.Endsem = [];
+      });
+    });
+  });
+
+  return clone;
+}
 
 // Will be populated from resources.json if present; otherwise uses defaultYears
 let years = [];
@@ -477,20 +562,41 @@ if (searchInput) searchInput.addEventListener('input', () => applyFilters());
 if (sortSelect) sortSelect.addEventListener('change', applyFilters);
 
 async function loadYears() {
+  let baseYears = [];
   try {
     const resp = await fetch('resources.json?t=' + Date.now(), { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
-      years = Array.isArray(data.years) ? data.years : [];
-      if (years.length === 0) years = defaultYears;
-      console.log('Loaded years:', years.length, 'years');
+      const loadedYears = Array.isArray(data.years) ? data.years : defaultYears;
+      baseYears = ensureFullSubjectStructure(loadedYears, defaultYears);
+      console.log('Loaded base structure from resources.json:', baseYears.length, 'years');
     } else {
-      years = defaultYears;
+      baseYears = defaultYears;
     }
   } catch (e) {
-    console.error('Error loading resources:', e);
-    years = defaultYears;
+    console.error('Error loading resources.json:', e);
+    baseYears = defaultYears;
   }
+
+  try {
+    // Try to load files
+    let resp = await fetch('/list-files', { cache: 'no-store' });
+    if (!resp.ok) {
+      resp = await fetch('/.netlify/functions/list-files', { cache: 'no-store' });
+    }
+    if (resp.ok) {
+      const files = await resp.json();
+      console.log('Loaded files:', files.length);
+      // Merge files into baseYears
+      years = mergeFilesIntoStructure(baseYears, files);
+    } else {
+      years = baseYears;
+    }
+  } catch (e) {
+    console.error('Error loading files:', e);
+    years = baseYears;
+  }
+
   fillYears();
   // Set initial to T.E
   const initialYear = years.find(y => y.name === 'T.E') || years[0];
@@ -504,7 +610,52 @@ async function loadYears() {
   semesterFilter.dispatchEvent(new Event('change'));
   // Set subject
   subjectFilter.value = subjects.length > 0 ? subjects[0].name : 'all';
+  // Set exam to Endsem by default
+  examFilter.value = 'Endsem';
   applyFilters();
+}
+
+function mergeFilesIntoStructure(baseYears, files) {
+  const structure = JSON.parse(JSON.stringify(baseYears)); // Deep copy
+
+  // Group files by subject and exam
+  const fileMap = {};
+  files.forEach(file => {
+    const pathParts = file.filename.split('/');
+    let subject, exam, filename;
+    if (pathParts[0] === 'files') {
+      subject = pathParts[1];
+      exam = pathParts[2];
+      filename = pathParts.slice(3).join('/');
+    } else {
+      subject = pathParts[0];
+      exam = pathParts[1];
+      filename = pathParts.slice(2).join('/');
+    }
+    if (!fileMap[subject]) fileMap[subject] = { Insem: [], Endsem: [] };
+    if (!fileMap[subject][exam]) fileMap[subject][exam] = [];
+    fileMap[subject][exam].push({
+      title: filename,
+      url: file.url,
+      mtime: file.uploadDate
+    });
+  });
+
+  // Merge into structure
+  structure.forEach(year => {
+    year.semesters.forEach(sem => {
+      sem.subjects.forEach(sub => {
+        if (fileMap[sub.name]) {
+          // Merge file resources
+          Object.keys(fileMap[sub.name]).forEach(exam => {
+            sub.resources[exam] = sub.resources[exam].concat(fileMap[sub.name][exam]);
+          });
+        }
+      });
+    });
+  });
+
+  return structure;
 }
 
 // Event listener for year filter change
@@ -518,9 +669,18 @@ yearFilter.addEventListener('change', () => {
     semesters = year ? year.semesters : [];
   }
   fillSemesters();
-  // Reset subject filter
-  subjects = [];
+  // Auto-select first semester
+  semesterFilter.value = semesters.length > 0 ? semesters[0].name : 'all';
+  // Populate subjects for currently selected semester
+  if (semesterFilter.value === 'all') {
+    subjects = [];
+  } else {
+    const semester = semesters.find(s => s.name === semesterFilter.value);
+    subjects = semester ? semester.subjects : [];
+  }
   fillSubjects();
+  // Auto-select first subject
+  subjectFilter.value = subjects.length > 0 ? subjects[0].name : 'all';
   applyFilters();
 });
 
@@ -534,6 +694,7 @@ semesterFilter.addEventListener('change', () => {
     subjects = semester ? semester.subjects : [];
   }
   fillSubjects();
+  subjectFilter.value = subjects.length > 0 ? subjects[0].name : 'all';
   applyFilters();
 });
 

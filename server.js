@@ -22,8 +22,31 @@ const FILES_DIR = path.join(ROOT, 'files');
 
 app.use(express.static(ROOT)); // Serve static files (HTML, CSS, JS, etc.)
 
+// Helper function to walk directory recursively
+async function* walk(dir) {
+  for (const entry of await fs.promises.readdir(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      yield* walk(fullPath);
+    } else {
+      yield fullPath;
+    }
+  }
+}
+
 function ensureDirSync(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function hasUnitTypePrefix(fileName, type) {
+  const base = path.parse(fileName).name;
+  if (type === 'handwritten') {
+    return /^\s*hand[a-z]*\s*notes?\b/i.test(base);
+  }
+  if (type === 'imp') {
+    return /^\s*(?:imp(?:ortant)?\s*questions?)\b/i.test(base);
+  }
+  return false;
 }
 
 function makeDestName(label, type, originalName){
@@ -31,7 +54,9 @@ function makeDestName(label, type, originalName){
   if (label.includes('Que Paper Solution')) prefix = 'Que Paper Solution - ';
   else if (label.includes('Que Paper')) prefix = 'Que Paper - ';
   else if (label.startsWith('Unit')){
-    prefix = (type === 'handwritten' ? 'Handwritten Notes - ' : 'IMP Questions - ');
+    const unitType = type === 'handwritten' ? 'handwritten' : 'imp';
+    if (hasUnitTypePrefix(originalName, unitType)) return originalName;
+    prefix = (unitType === 'handwritten' ? 'Handwritten Notes - ' : 'IMP Questions - ');
   }
   const lower = originalName.toLowerCase();
   if (lower.includes(prefix.trim().toLowerCase())) return originalName;
@@ -119,12 +144,34 @@ app.post('/delete', async (req, res) => {
     }
     await fsp.unlink(abs);
 
-    // ...existing code...
     const ok = await rebuildManifest();
     return res.json({ ok, deleted: url });
   } catch (e){
     console.error(e);
     return res.status(500).json({ ok:false, error:e.message });
+  }
+});
+
+// List files endpoint (similar to netlify function)
+app.get('/list-files', async (req, res) => {
+  try {
+    const files = [];
+    for await (const filePath of walk(FILES_DIR)) {
+      const relPath = path.relative(FILES_DIR, filePath).split(path.sep).join('/');
+      const stat = await fs.promises.stat(filePath);
+      files.push({
+        id: relPath, // Use relPath as id for local
+        filename: relPath,
+        length: stat.size,
+        contentType: require('mime-types').lookup(filePath) || 'application/pdf',
+        uploadDate: stat.mtime.toISOString(),
+        url: `/files/${relPath}` // Local URL
+      });
+    }
+    res.json(files);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
   }
 });
 

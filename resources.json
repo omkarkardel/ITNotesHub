@@ -5,11 +5,83 @@
       "semesters": [
         {
           "name": "Sem 1",
-          "subjects": []
+          "subjects": [
+            {
+              "name": "Engineering Math1",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "PPS",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "Engg Physics",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "BEE",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "SME",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            }
+          ]
         },
         {
           "name": "Sem 2",
-          "subjects": []
+          "subjects": [
+            {
+              "name": "Enggn Math2",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "Enggn Chemistry",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "Enggn Mechanics",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "Enggn Graphics",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "BXE",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            }
+          ]
         }
       ]
     },
@@ -18,11 +90,95 @@
       "semesters": [
         {
           "name": "Sem 3",
-          "subjects": []
+          "subjects": [
+            {
+              "name": "DSA",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "OOP",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "BCN",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "DM",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "LDCO",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            }
+          ]
         },
         {
           "name": "Sem 4",
-          "subjects": []
+          "subjects": [
+            {
+              "name": "Enggn Math3",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "DBMS",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "CG",
+              "resources": {
+                "Insem": [],
+                "Endsem": [
+                  {
+                    "type": "group",
+                    "title": "Unit 3",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - GraphTheory",
+                        "url": "files/CG/Endsem/Unit3/Handwritten Notes - GraphTheory.pdf",
+                        "mtime": "2026-02-13T08:05:19.061Z"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "PA",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            },
+            {
+              "name": "SE",
+              "resources": {
+                "Insem": [],
+                "Endsem": []
+              }
+            }
+          ]
         }
       ]
     },
@@ -33,7 +189,7 @@
           "name": "Sem 5",
           "subjects": [
             {
-              "name": "ADBMS",
+              "name": "TOC",
               "resources": {
                 "Insem": [],
                 "Endsem": [
@@ -42,24 +198,45 @@
                     "title": "Endsem Que Paper",
                     "items": [
                       {
-                        "title": "ADBMS Endsem QP",
-                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS Endsem QP.pdf",
-                        "mtime": "2025-11-24T03:37:50.441Z"
+                        "title": "May_Jun_2023",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
+                        "mtime": "2025-11-24T04:01:07.933Z"
                       },
                       {
-                        "title": "ADBMS Endsem",
-                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS Endsem.pdf",
-                        "mtime": "2025-11-24T03:37:38.125Z"
+                        "title": "May_Jun_2024",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
+                        "mtime": "2025-11-24T04:01:00.058Z"
                       },
                       {
-                        "title": "ADBMS_2023",
-                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS_2023.pdf",
-                        "mtime": "2025-11-24T03:38:04.511Z"
+                        "title": "May_Jun_2025",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
+                        "mtime": "2025-11-24T04:00:53.024Z"
                       },
                       {
-                        "title": "Endsem Dec 2023",
-                        "url": "files/ADBMS/Endsem/Endsem Que Paper - Endsem Dec 2023.pdf",
-                        "mtime": "2025-11-24T03:36:56.582Z"
+                        "title": "Nov_Dec_2022",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
+                        "mtime": "2025-11-24T04:00:46.381Z"
+                      },
+                      {
+                        "title": "Nov_Dec_2023",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
+                        "mtime": "2025-11-24T04:00:37.745Z"
+                      },
+                      {
+                        "title": "Nov_Dec_2024",
+                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
+                        "mtime": "2025-11-24T04:00:29.083Z"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Decode/Book",
+                    "items": [
+                      {
+                        "title": "TOC_Decode",
+                        "url": "files/TOC/Endsem/TOC_Decode.pdf",
+                        "mtime": "2025-11-24T04:04:46.772Z"
                       }
                     ]
                   },
@@ -68,31 +245,9 @@
                     "title": "Unit 3",
                     "items": [
                       {
-                        "title": "Handwritten Notes - Handwritten Notes - Unil-3 adbms",
-                        "url": "files/ADBMS/Endsem/Unit3/Handwritten Notes - Unil-3 adbms.pdf",
-                        "mtime": "2025-11-25T15:24:41.754Z"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "group",
-                    "title": "Unit 4",
-                    "items": [
-                      {
-                        "title": "Handwritten Notes - Handwritten Notes - Unit 4 adbms",
-                        "url": "files/ADBMS/Endsem/Unit4/Handwritten Notes - Unit 4 adbms.pdf",
-                        "mtime": "2025-11-25T15:24:50.271Z"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "group",
-                    "title": "Unit 6",
-                    "items": [
-                      {
-                        "title": "Handwritten Notes - Handwritten Notes - Unit 6 Adbms",
-                        "url": "files/ADBMS/Endsem/Unit6/Handwritten Notes - Unit 6 Adbms.pdf",
-                        "mtime": "2025-11-25T15:25:09.274Z"
+                        "title": "Handwritten Notes - TOC_Unit3_HandwrittenNotes",
+                        "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf",
+                        "mtime": "2025-11-24T03:40:02.408Z"
                       }
                     ]
                   }
@@ -227,9 +382,76 @@
                     "title": "Unit 3",
                     "items": [
                       {
-                        "title": "Handwritten Notes - Handwritten Notes - ML_U3notes",
+                        "title": "Handwritten Notes - ML_U3notes",
                         "url": "files/ML/Endsem/Unit3/Handwritten Notes - ML_U3notes.pdf",
                         "mtime": "2025-11-25T15:24:16.031Z"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "ADBMS",
+              "resources": {
+                "Insem": [],
+                "Endsem": [
+                  {
+                    "type": "group",
+                    "title": "Endsem Que Paper",
+                    "items": [
+                      {
+                        "title": "ADBMS Endsem QP",
+                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS Endsem QP.pdf",
+                        "mtime": "2025-11-24T03:37:50.441Z"
+                      },
+                      {
+                        "title": "ADBMS Endsem",
+                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS Endsem.pdf",
+                        "mtime": "2025-11-24T03:37:38.125Z"
+                      },
+                      {
+                        "title": "ADBMS_2023",
+                        "url": "files/ADBMS/Endsem/Endsem Que Paper - ADBMS_2023.pdf",
+                        "mtime": "2025-11-24T03:38:04.511Z"
+                      },
+                      {
+                        "title": "Endsem Dec 2023",
+                        "url": "files/ADBMS/Endsem/Endsem Que Paper - Endsem Dec 2023.pdf",
+                        "mtime": "2025-11-24T03:36:56.582Z"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 3",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unil-3 adbms",
+                        "url": "files/ADBMS/Endsem/Unit3/Handwritten Notes - Unil-3 adbms.pdf",
+                        "mtime": "2025-11-25T15:24:41.754Z"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 4",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unit 4 adbms",
+                        "url": "files/ADBMS/Endsem/Unit4/Handwritten Notes - Unit 4 adbms.pdf",
+                        "mtime": "2025-11-25T15:24:50.271Z"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 6",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unit 6 Adbms",
+                        "url": "files/ADBMS/Endsem/Unit6/Handwritten Notes - Unit 6 Adbms.pdf",
+                        "mtime": "2025-11-25T15:25:09.274Z"
                       }
                     ]
                   }
@@ -298,75 +520,9 @@
                     "title": "Unit 6",
                     "items": [
                       {
-                        "title": "Handwritten Notes - Handwritten Notes - OS- unit 6 Notes",
+                        "title": "Handwritten Notes - OS- unit 6 Notes",
                         "url": "files/OS/Endsem/Unit6/Handwritten Notes - OS- unit 6 Notes.pdf",
                         "mtime": "2025-11-25T15:26:18.113Z"
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            {
-              "name": "TOC",
-              "resources": {
-                "Insem": [],
-                "Endsem": [
-                  {
-                    "type": "group",
-                    "title": "Endsem Que Paper",
-                    "items": [
-                      {
-                        "title": "May_Jun_2023",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2023.pdf",
-                        "mtime": "2025-11-24T04:01:07.933Z"
-                      },
-                      {
-                        "title": "May_Jun_2024",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2024.pdf",
-                        "mtime": "2025-11-24T04:01:00.058Z"
-                      },
-                      {
-                        "title": "May_Jun_2025",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - May_Jun_2025.pdf",
-                        "mtime": "2025-11-24T04:00:53.024Z"
-                      },
-                      {
-                        "title": "Nov_Dec_2022",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2022.pdf",
-                        "mtime": "2025-11-24T04:00:46.381Z"
-                      },
-                      {
-                        "title": "Nov_Dec_2023",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2023.pdf",
-                        "mtime": "2025-11-24T04:00:37.745Z"
-                      },
-                      {
-                        "title": "Nov_Dec_2024",
-                        "url": "files/TOC/Endsem/Endsem Que Paper - Nov_Dec_2024.pdf",
-                        "mtime": "2025-11-24T04:00:29.083Z"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "group",
-                    "title": "Decode/Book",
-                    "items": [
-                      {
-                        "title": "TOC_Decode",
-                        "url": "files/TOC/Endsem/TOC_Decode.pdf",
-                        "mtime": "2025-11-24T04:04:46.772Z"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "group",
-                    "title": "Unit 3",
-                    "items": [
-                      {
-                        "title": "Handwritten Notes - Handwritten Notes - TOC_Unit3_HandwrittenNotes",
-                        "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf",
-                        "mtime": "2025-11-24T03:40:02.408Z"
                       }
                     ]
                   }

@@ -95,6 +95,21 @@ async function fileMeta(absPath) {
   } catch { return null; }
 }
 
+function stripRepeatedTypePrefix(baseName, type) {
+  let out = baseName.trim();
+  const handwrittenPattern = /^\s*hand[a-z]*\s*notes?\b(?:\s*[-_:]+\s*|\s+)+/i;
+  const impPattern = /^\s*(?:imp(?:ortant)?\s*questions?)\b(?:\s*[-_:]+\s*|\s+)+/i;
+  const pattern = type === 'handwritten' ? handwrittenPattern : impPattern;
+
+  let changed = true;
+  while (changed) {
+    const next = out.replace(pattern, '').trim();
+    changed = next !== out;
+    out = next;
+  }
+  return out || baseName;
+}
+
 async function buildUnitGroup(examDir, unitLabel) {
   // Support both 'Unit1' and 'Unit 1'
   const unitDirs = [unitLabel.replace(' ', ''), unitLabel];
@@ -110,10 +125,12 @@ async function buildUnitGroup(examDir, unitLabel) {
 
   const items = [];
   for (const f of hnFiles) {
-    items.push({ title: 'Handwritten Notes - ' + path.parse(f).name, url: toWebPath(f), mtime: await fileMeta(f) });
+    const cleaned = stripRepeatedTypePrefix(path.parse(f).name, 'handwritten');
+    items.push({ title: 'Handwritten Notes - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) });
   }
   for (const f of impFiles) {
-    items.push({ title: 'IMP Questions - ' + path.parse(f).name, url: toWebPath(f), mtime: await fileMeta(f) });
+    const cleaned = stripRepeatedTypePrefix(path.parse(f).name, 'imp');
+    items.push({ title: 'IMP Questions - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) });
   }
   if (items.length === 0) return null;
 
@@ -201,6 +218,14 @@ async function buildSubject(subjectName) {
   return result;
 }
 
+const allSubjects = [
+  'Engineering Math1', 'PPS', 'Engg Physics', 'BEE', 'SME',
+  'Enggn Math2', 'Enggn Chemistry', 'Enggn Mechanics', 'Enggn Graphics', 'BXE',
+  'DSA', 'OOP', 'BCN', 'DM', 'LDCO',
+  'Enggn Math3', 'DBMS', 'CG', 'PA', 'SE',
+  'TOC', 'HCI', 'ML', 'ADBMS', 'OS'
+];
+
 async function main() {
   if (!(await pathExists(FILES_DIR))) {
     console.error(`Missing folder: ${FILES_DIR}. Create it and place your files.`);
@@ -208,15 +233,43 @@ async function main() {
   }
   const subjectNames = await listDirs(FILES_DIR);
   const subjects = [];
-  for (const s of subjectNames) {
-    subjects.push(await buildSubject(s));
+  for (const s of allSubjects) {
+    if (subjectNames.includes(s)) {
+      subjects.push(await buildSubject(s));
+    } else {
+      subjects.push({ name: s, resources: { Insem: [], Endsem: [] } });
+    }
   }
-  // Group subjects under years (hardcoded for now: T.E has subjects, others empty)
+  // Group subjects under years
   const years = [
-    { name: 'F.E', semesters: [ { name: 'Sem 1', subjects: [] }, { name: 'Sem 2', subjects: [] } ] },
-    { name: 'S.E', semesters: [ { name: 'Sem 3', subjects: [] }, { name: 'Sem 4', subjects: [] } ] },
-    { name: 'T.E', semesters: [ { name: 'Sem 5', subjects: subjects }, { name: 'Sem 6', subjects: [] } ] },
-    { name: 'B.E', semesters: [ { name: 'Sem 7', subjects: [] }, { name: 'Sem 8', subjects: [] } ] }
+    {
+      name: 'F.E',
+      semesters: [
+        { name: 'Sem 1', subjects: subjects.filter(s => ['Engineering Math1', 'PPS', 'Engg Physics', 'BEE', 'SME'].includes(s.name)) },
+        { name: 'Sem 2', subjects: subjects.filter(s => ['Enggn Math2', 'Enggn Chemistry', 'Enggn Mechanics', 'Enggn Graphics', 'BXE'].includes(s.name)) }
+      ]
+    },
+    {
+      name: 'S.E',
+      semesters: [
+        { name: 'Sem 3', subjects: subjects.filter(s => ['DSA', 'OOP', 'BCN', 'DM', 'LDCO'].includes(s.name)) },
+        { name: 'Sem 4', subjects: subjects.filter(s => ['Enggn Math3', 'DBMS', 'CG', 'PA', 'SE'].includes(s.name)) }
+      ]
+    },
+    {
+      name: 'T.E',
+      semesters: [
+        { name: 'Sem 5', subjects: subjects.filter(s => ['TOC', 'HCI', 'ML', 'ADBMS', 'OS'].includes(s.name)) },
+        { name: 'Sem 6', subjects: [] }
+      ]
+    },
+    {
+      name: 'B.E',
+      semesters: [
+        { name: 'Sem 7', subjects: [] },
+        { name: 'Sem 8', subjects: [] }
+      ]
+    }
   ];
   const payload = { years: years };
   await fs.writeFile(OUT_FILE, JSON.stringify(payload, null, 2), 'utf8');
