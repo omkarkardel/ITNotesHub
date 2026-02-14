@@ -30,6 +30,9 @@
     .dropzone { margin-top:.5rem; padding:.75rem; border:1px dashed var(--border); border-radius:8px; text-align:center; opacity:.9; background:var(--panel); }
     .dropzone.drag { background:var(--panel-alt); border-color: var(--accent); }
     .mini { font-size:.8rem; opacity:.8; }
+    .badge { display:inline-block; padding:.2rem .45rem; border-radius:999px; font-size:.72rem; font-weight:600; }
+    .badge.pending { background:#fff3bf; color:#8a5a00; }
+    .badge.approved { background:#d3f9d8; color:#1b5e20; }
     [data-theme='dark'] .btn.secondary { background:var(--panel); }
     [data-theme='dark'] .btn.secondary:hover { background:var(--panel-alt); }
 
@@ -227,6 +230,7 @@
       <input id="filePicker" type="file" multiple style="display:none" />
       <p class="tip">Tip: Works best in Chromium-based browsers over localhost (secure context).</p>
       <div id="log" class="log" aria-live="polite"></div>
+
     </div>
   </div>
 

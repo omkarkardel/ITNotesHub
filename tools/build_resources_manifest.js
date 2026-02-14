@@ -18,6 +18,7 @@ const path = require('path');
 const ROOT = process.cwd();
 const FILES_DIR = path.join(ROOT, 'files');
 const OUT_FILE = path.join(ROOT, 'resources.json');
+const PRICING_FILE = path.join(ROOT, 'pricing-meta.json');
 
 const exts = ['.pdf', '.docx', '.pptx', '.ppt', '.xlsx', '.xls', '.txt', '.png', '.jpg', '.jpeg', '.zip'];
 
@@ -95,6 +96,28 @@ async function fileMeta(absPath) {
   } catch { return null; }
 }
 
+async function readPricingMeta() {
+  try {
+    const raw = await fs.readFile(PRICING_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function withPricing(item, pricingMeta) {
+  const key = String(item.url || '').replace(/\\/g, '/');
+  const pricing = pricingMeta[key];
+  if (!pricing) return item;
+  return {
+    ...item,
+    accessType: pricing.accessType === 'Paid' ? 'Paid' : 'Free',
+    priceInr: pricing.accessType === 'Paid' ? Number(pricing.priceInr) : null,
+    formUrl: pricing.accessType === 'Paid' ? pricing.formUrl || null : null
+  };
+}
+
 function stripRepeatedTypePrefix(baseName, type) {
   let out = baseName.trim();
   const handwrittenPattern = /^\s*hand[a-z]*\s*notes?\b(?:\s*[-_:]+\s*|\s+)+/i;
@@ -110,7 +133,7 @@ function stripRepeatedTypePrefix(baseName, type) {
   return out || baseName;
 }
 
-async function buildUnitGroup(examDir, unitLabel) {
+async function buildUnitGroup(examDir, unitLabel, pricingMeta) {
   // Support both 'Unit1' and 'Unit 1'
   const unitDirs = [unitLabel.replace(' ', ''), unitLabel];
   let unitPath = null;
@@ -126,11 +149,13 @@ async function buildUnitGroup(examDir, unitLabel) {
   const items = [];
   for (const f of hnFiles) {
     const cleaned = stripRepeatedTypePrefix(path.parse(f).name, 'handwritten');
-    items.push({ title: 'Handwritten Notes - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) });
+    const item = { title: 'Handwritten Notes - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) };
+    items.push(withPricing(item, pricingMeta));
   }
   for (const f of impFiles) {
     const cleaned = stripRepeatedTypePrefix(path.parse(f).name, 'imp');
-    items.push({ title: 'IMP Questions - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) });
+    const item = { title: 'IMP Questions - ' + cleaned, url: toWebPath(f), mtime: await fileMeta(f) };
+    items.push(withPricing(item, pricingMeta));
   }
   if (items.length === 0) return null;
 
@@ -141,7 +166,7 @@ function toWebPath(absPath) {
   return absPath.replace(ROOT + path.sep, '').split(path.sep).join('/');
 }
 
-async function buildSubject(subjectName) {
+async function buildSubject(subjectName, pricingMeta) {
   const subjectDir = path.join(FILES_DIR, subjectName);
   const result = { name: subjectName, resources: { Insem: [], Endsem: [] } };
 
@@ -156,7 +181,8 @@ async function buildSubject(subjectName) {
         const qpItems = [];
         for (const f of qpFiles) {
           const base = path.parse(f).name;
-          qpItems.push({ title: stripPrefix(base, 'Insem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) });
+          const item = { title: stripPrefix(base, 'Insem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) };
+          qpItems.push(withPricing(item, pricingMeta));
         }
         result.resources.Insem.push({ type: 'group', title: 'Insem Que Paper', items: qpItems });
       }
@@ -164,12 +190,13 @@ async function buildSubject(subjectName) {
         const solItems = [];
         for (const f of solFiles) {
           const base = path.parse(f).name;
-          solItems.push({ title: stripPrefix(base, 'Insem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) });
+          const item = { title: stripPrefix(base, 'Insem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) };
+          solItems.push(withPricing(item, pricingMeta));
         }
         result.resources.Insem.push({ type: 'group', title: 'Insem Que Paper Solution', items: solItems });
       }
       for (const u of ['Unit 1', 'Unit 2']) {
-        const grp = await buildUnitGroup(examDir, u);
+        const grp = await buildUnitGroup(examDir, u, pricingMeta);
         if (grp) result.resources.Insem.push(grp);
       }
     } else {
@@ -186,7 +213,8 @@ async function buildSubject(subjectName) {
         const endQpItems = [];
         for (const f of qpFiles) {
           const base = path.parse(f).name;
-          endQpItems.push({ title: stripPrefix(base, 'Endsem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) });
+          const item = { title: stripPrefix(base, 'Endsem Que Paper'), url: toWebPath(f), mtime: await fileMeta(f) };
+          endQpItems.push(withPricing(item, pricingMeta));
         }
         result.resources.Endsem.push({ type:'group', title:'Endsem Que Paper', items:endQpItems });
       }
@@ -196,7 +224,8 @@ async function buildSubject(subjectName) {
         const endSolItems = [];
         for (const f of allSolFiles) {
           const base = path.parse(f).name;
-          endSolItems.push({ title: stripPrefix(base, 'Endsem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) });
+          const item = { title: stripPrefix(base, 'Endsem Que Paper Solution'), url: toWebPath(f), mtime: await fileMeta(f) };
+          endSolItems.push(withPricing(item, pricingMeta));
         }
         result.resources.Endsem.push({ type:'group', title:'Endsem Que Paper Solution', items:endSolItems });
       }
@@ -204,12 +233,13 @@ async function buildSubject(subjectName) {
         const decodeItems = [];
         for (const f of decodeFiles) {
           const base = path.parse(f).name;
-          decodeItems.push({ title: stripPrefix(base, 'Decode/Book'), url: toWebPath(f), mtime: await fileMeta(f) });
+          const item = { title: stripPrefix(base, 'Decode/Book'), url: toWebPath(f), mtime: await fileMeta(f) };
+          decodeItems.push(withPricing(item, pricingMeta));
         }
         result.resources.Endsem.push({ type:'group', title:'Decode/Book', items:decodeItems });
       }
       for (const u of ['Unit 3', 'Unit 4', 'Unit 5', 'Unit 6']) {
-        const grp = await buildUnitGroup(examDir, u);
+        const grp = await buildUnitGroup(examDir, u, pricingMeta);
         if (grp) result.resources.Endsem.push(grp);
       }
     }
@@ -232,10 +262,11 @@ async function main() {
     process.exit(1);
   }
   const subjectNames = await listDirs(FILES_DIR);
+  const pricingMeta = await readPricingMeta();
   const subjects = [];
   for (const s of allSubjects) {
     if (subjectNames.includes(s)) {
-      subjects.push(await buildSubject(s));
+      subjects.push(await buildSubject(s, pricingMeta));
     } else {
       subjects.push({ name: s, resources: { Insem: [], Endsem: [] } });
     }

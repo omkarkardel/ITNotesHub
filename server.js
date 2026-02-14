@@ -9,6 +9,7 @@ const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 const { spawn } = require('child_process');
+const { PDFDocument, rgb, degrees, StandardFonts } = require('pdf-lib');
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 200 * 1024 * 1024 } });
@@ -19,8 +20,27 @@ app.use(express.json());
 
 const ROOT = process.cwd();
 const FILES_DIR = path.join(ROOT, 'files');
+const PRICING_FILE = path.join(ROOT, 'pricing-meta.json');
 
-app.use(express.static(ROOT)); // Serve static files (HTML, CSS, JS, etc.)
+app.use(express.static(ROOT, {
+  etag: true,
+  lastModified: true,
+  maxAge: '1h',
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext === '.html' || ext === '.json') {
+      res.setHeader('Cache-Control', 'no-cache');
+      return;
+    }
+    if (['.css', '.js', '.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.woff', '.woff2'].includes(ext)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      return;
+    }
+    if (ext === '.pdf') {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
+  }
+})); // Serve static files (HTML, CSS, JS, etc.)
 
 // Helper function to walk directory recursively
 async function* walk(dir) {
@@ -36,6 +56,41 @@ async function* walk(dir) {
 
 function ensureDirSync(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+async function watermarkPdfBuffer(buffer, text) {
+  const pdfDoc = await PDFDocument.load(buffer);
+  const pages = pdfDoc.getPages();
+  if (!pages.length) return buffer;
+
+  const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  pages.forEach((page) => {
+    const { width, height } = page.getSize();
+    const fontSize = Math.max(28, Math.floor(Math.min(width, height) / 8));
+    page.drawText(text, {
+      x: width * 0.12,
+      y: height * 0.5,
+      size: fontSize,
+      font,
+      color: rgb(0.35, 0.35, 0.35),
+      rotate: degrees(-25),
+      opacity: 0.18
+    });
+  });
+
+  const bytes = await pdfDoc.save();
+  return Buffer.from(bytes);
+}
+
+function isPdfUpload(file) {
+  if (!file) return false;
+  if (file.mimetype === 'application/pdf') return true;
+  const name = (file.originalname || '').toLowerCase();
+  return name.endsWith('.pdf');
+}
+
+function isPdfPath(filePath) {
+  return (filePath || '').toLowerCase().endsWith('.pdf');
 }
 
 function hasUnitTypePrefix(fileName, type) {
@@ -84,6 +139,20 @@ function rebuildManifest(){
   });
 }
 
+async function readPricingMeta() {
+  try {
+    const raw = await fsp.readFile(PRICING_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+async function writePricingMeta(meta) {
+  await fsp.writeFile(PRICING_FILE, JSON.stringify(meta, null, 2), 'utf8');
+}
+
 app.post('/upload', upload.array('files'), async (req, res) => {
   try {
     const { subject, exam, label, type } = req.body;
@@ -94,13 +163,19 @@ app.post('/upload', upload.array('files'), async (req, res) => {
     const dir = path.join(ROOT, ...parts);
     ensureDirSync(dir);
 
-
+    const pricingMeta = await readPricingMeta();
     const savedFiles = [];
     for (const f of req.files){
       const destName = makeDestName(label, type, f.originalname);
       const abs = path.join(dir, destName);
       await writeBufferToFile(abs, f.buffer);
       const relPath = path.join(...parts, destName).split(path.sep).join('/');
+      pricingMeta[relPath] = {
+        accessType: 'Free',
+        priceInr: null,
+        formUrl: null,
+        updatedAt: new Date().toISOString()
+      };
       savedFiles.push({
         subject, exam, label, type: type || null,
         filename: destName, path: relPath,
@@ -109,6 +184,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
         uploadedAt: new Date()
       });
     }
+    await writePricingMeta(pricingMeta);
 
     const ok = await rebuildManifest();
     return res.json({ ok, saved: req.files.length, savedFiles });
@@ -143,12 +219,48 @@ app.post('/delete', async (req, res) => {
       return res.status(404).json({ ok:false, error:'File not found' });
     }
     await fsp.unlink(abs);
+    const pricingMeta = await readPricingMeta();
+    if (pricingMeta[safeRel]) {
+      delete pricingMeta[safeRel];
+      await writePricingMeta(pricingMeta);
+    }
 
     const ok = await rebuildManifest();
     return res.json({ ok, deleted: url });
   } catch (e){
     console.error(e);
     return res.status(500).json({ ok:false, error:e.message });
+  }
+});
+
+// Watermarked download endpoint: /download?url=files/Subject/Exam/.../file.pdf
+app.get('/download', async (req, res) => {
+  try {
+    const url = (req.query.url || '').toString();
+    if (!url) return res.status(400).send('Missing url');
+    const safeRel = url.replace(/\\/g, '/').replace(/^[/.]+/, '');
+    const abs = path.join(ROOT, safeRel.split('/').join(path.sep));
+    if (!abs.startsWith(FILES_DIR)) {
+      return res.status(400).send('Invalid path');
+    }
+    if (!fs.existsSync(abs)) {
+      return res.status(404).send('File not found');
+    }
+
+    const filename = path.basename(abs);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    if (isPdfPath(abs)) {
+      const input = await fsp.readFile(abs);
+      const out = await watermarkPdfBuffer(input, 'ITNotesHub');
+      res.setHeader('Content-Type', 'application/pdf');
+      return res.send(out);
+    }
+
+    return res.sendFile(abs);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send('Download error');
   }
 });
 

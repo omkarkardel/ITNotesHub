@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ITNotesHub – Viewer</title>
+  <meta name="description" content="Watermarked viewer for ITNotesHub notes." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="viewer-page">
+  <header class="viewer-header">
+    <a href="notes.html" class="brand">ITNotesHub</a>
+    <div class="viewer-meta">
+      <h1 id="viewerTitle" class="viewer-title">Note</h1>
+      <p class="viewer-subtitle">Watermarked preview</p>
+    </div>
+    <div class="viewer-actions">
+      <a id="viewerDownload" class="resource-link" download>Download</a>
+      <a id="viewerOpen" class="resource-link" target="_blank" rel="noopener">Open file</a>
+    </div>
+  </header>
+
+  <main class="viewer-shell">
+    <div id="viewerMessage" class="viewer-message hidden"></div>
+    <div class="viewer-stage">
+      <div class="watermark-layer" aria-hidden="true">ITNotesHub</div>
+      <iframe id="viewerFrame" class="viewer-frame hidden" title="Note preview"></iframe>
+      <img id="viewerImage" class="viewer-image hidden" alt="Note preview" />
+    </div>
+  </main>
+
+  <script src="viewer.js"></script>
+</body>
+</html>

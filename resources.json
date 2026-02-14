@@ -116,7 +116,22 @@
               "name": "DM",
               "resources": {
                 "Insem": [],
-                "Endsem": []
+                "Endsem": [
+                  {
+                    "type": "group",
+                    "title": "Unit 3",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - GraphTheory",
+                        "url": "files/DM/Endsem/Unit3/Handwritten Notes - GraphTheory.pdf",
+                        "mtime": "2026-02-13T09:08:30.583Z",
+                        "accessType": "Paid",
+                        "priceInr": 20,
+                        "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdEny6qyB5gMvHrhZuqOWEhyIV7IKyq-NmGZMA4j-ydzDHIeA/viewform?usp=sharing&ouid=115643862561974200370"
+                      }
+                    ]
+                  }
+                ]
               }
             },
             {
@@ -149,19 +164,7 @@
               "name": "CG",
               "resources": {
                 "Insem": [],
-                "Endsem": [
-                  {
-                    "type": "group",
-                    "title": "Unit 3",
-                    "items": [
-                      {
-                        "title": "Handwritten Notes - GraphTheory",
-                        "url": "files/CG/Endsem/Unit3/Handwritten Notes - GraphTheory.pdf",
-                        "mtime": "2026-02-13T08:05:19.061Z"
-                      }
-                    ]
-                  }
-                ]
+                "Endsem": []
               }
             },
             {
@@ -245,9 +248,54 @@
                     "title": "Unit 3",
                     "items": [
                       {
-                        "title": "Handwritten Notes - TOC_Unit3_HandwrittenNotes",
-                        "url": "files/TOC/Endsem/Unit3/Handwritten Notes - TOC_Unit3_HandwrittenNotes.pdf",
-                        "mtime": "2025-11-24T03:40:02.408Z"
+                        "title": "Handwritten Notes - Unit3_Toc",
+                        "url": "files/TOC/Endsem/Unit3/Handwritten Notes - Unit3_Toc.pdf",
+                        "mtime": "2026-02-14T13:24:01.708Z",
+                        "accessType": "Free",
+                        "priceInr": null,
+                        "formUrl": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 4",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unit4_Toc",
+                        "url": "files/TOC/Endsem/Unit4/Handwritten Notes - Unit4_Toc.pdf",
+                        "mtime": "2026-02-14T13:26:31.685Z",
+                        "accessType": "Free",
+                        "priceInr": null,
+                        "formUrl": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 5",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unit5_Toc",
+                        "url": "files/TOC/Endsem/Unit5/Handwritten Notes - Unit5_Toc.pdf",
+                        "mtime": "2026-02-14T13:26:44.003Z",
+                        "accessType": "Free",
+                        "priceInr": null,
+                        "formUrl": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 6",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - Unit6_Toc",
+                        "url": "files/TOC/Endsem/Unit6/Handwritten Notes - Unit6_Toc.pdf",
+                        "mtime": "2026-02-14T13:26:56.347Z",
+                        "accessType": "Free",
+                        "priceInr": null,
+                        "formUrl": null
                       }
                     ]
                   }
@@ -303,6 +351,20 @@
                         "title": "HCI_Decode",
                         "url": "files/HCI/Endsem/HCI_Decode.pdf",
                         "mtime": "2025-11-24T03:40:46.829Z"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "group",
+                    "title": "Unit 3",
+                    "items": [
+                      {
+                        "title": "Handwritten Notes - HCI_Exam_Medium_Level_Answers",
+                        "url": "files/HCI/Endsem/Unit3/Handwritten Notes - HCI_Exam_Medium_Level_Answers.pdf",
+                        "mtime": "2026-02-13T09:54:15.235Z",
+                        "accessType": "Paid",
+                        "priceInr": 100,
+                        "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdEny6qyB5gMvHrhZuqOWEhyIV7IKyq-NmGZMA4j-ydzDHIeA/viewform?usp=sharing&ouid=115643862561974200370"
                       }
                     ]
                   }

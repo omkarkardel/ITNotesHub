@@ -24,6 +24,15 @@
     applyTheme(start);
     var btn = document.getElementById('themeToggle');
     if(btn){ btn.addEventListener('click', function(){ var current = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'; applyTheme(current); }); }
+
+    // Cache static assets for faster repeat loads.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(function (reg) {
+          reg.update().catch(function(){});
+        }).catch(function(){});
+      });
+    }
   }
   document.addEventListener('DOMContentLoaded', init);
 })();

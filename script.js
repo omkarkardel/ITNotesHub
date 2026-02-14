@@ -243,7 +243,29 @@ const previewInner = document.getElementById('previewInner');
 const modalDownload = document.getElementById('modalDownload');
 const modalClose = document.getElementById('modalClose');
 
+
 yearSpan.textContent = new Date().getFullYear();
+
+function buildViewerUrl(title, url) {
+  if (!url) return '';
+  const params = new URLSearchParams();
+  if (title) params.set('title', title);
+  params.set('url', url);
+  return `viewer.html?${params.toString()}`;
+}
+
+function openWatermarkedViewer(title, url) {
+  const viewerUrl = buildViewerUrl(title, url);
+  if (!viewerUrl) return;
+  window.open(viewerUrl, '_blank');
+}
+
+function buildDownloadUrl(url) {
+  if (!url) return '';
+  const params = new URLSearchParams();
+  params.set('url', url);
+  return `/download?${params.toString()}`;
+}
 
 // View count storage (localStorage for demo)
 const getViewCount = (key) => parseInt(localStorage.getItem(`view_${key}`) || 0);
@@ -329,7 +351,9 @@ function render(resources) {
       
       if (res.type === 'link') {
         const link = document.createElement('a');
-        link.href = res.url;
+        link.href = buildViewerUrl(res.title, res.url) || res.url;
+        link.target = '_blank';
+        link.rel = 'noopener';
         link.className = 'resource-link';
         
         const titleSpan = document.createElement('span');
@@ -346,7 +370,13 @@ function render(resources) {
           link.appendChild(viewBadge);
         }
         
-        link.addEventListener('click', () => incrementView(viewKey));
+        link.addEventListener('click', (e) => {
+          incrementView(viewKey);
+          if (res.url) {
+            e.preventDefault();
+            openWatermarkedViewer(res.title, res.url);
+          }
+        });
         item.appendChild(link);
       } else if (res.type === 'group') {
         item.className = 'resource-group fade-in';
@@ -393,16 +423,16 @@ function render(resources) {
               subItem.appendChild(span);
             } else {
               const link = document.createElement('a');
-              link.href = subRes.url;
+              link.href = buildViewerUrl(subRes.title, subRes.url) || subRes.url;
+              link.target = '_blank';
+              link.rel = 'noopener';
               link.className = 'resource-link';
-              
               const contentWrapper = document.createElement('div');
               contentWrapper.className = 'resource-content';
               
               const titleSpan = document.createElement('span');
               titleSpan.textContent = subRes.title;
               contentWrapper.appendChild(titleSpan);
-
               // Last updated timestamp per item
               if (subRes.mtime) {
                 const d = new Date(subRes.mtime);
@@ -424,13 +454,17 @@ function render(resources) {
               
               link.appendChild(contentWrapper);
               
-              // Add download button
-              const downloadBtn = document.createElement('a');
-              downloadBtn.href = subRes.url;
-              downloadBtn.download = '';
+              // Add action button (download or buy)
+              const downloadBtn = document.createElement('button');
+              downloadBtn.type = 'button';
               downloadBtn.className = 'download-btn';
               downloadBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
-              downloadBtn.onclick = (e) => { e.stopPropagation(); incrementView(viewKey); };
+              downloadBtn.onclick = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                incrementView(viewKey);
+                if (subRes.url) window.open(buildDownloadUrl(subRes.url), '_blank');
+              };
               link.appendChild(downloadBtn);
 
               // Admin delete button (hidden unless body.admin-delete)
@@ -460,16 +494,9 @@ function render(resources) {
               link.appendChild(deleteBtn);
 
               
-              link.addEventListener('click', (e) => { if(e.target !== downloadBtn) incrementView(viewKey); });
-              // Open files directly in new tab (no preview modal)
               link.addEventListener('click', (e) => {
-                const targetTag = e.target.tagName.toLowerCase();
-                if (targetTag === 'button' || targetTag === 'svg' || targetTag === 'path') return; // delete icon or button
-                const href = subRes.url || '';
-                if (/\.(pdf|png|jpg|jpeg|gif)$/i.test(href)) {
-                  e.preventDefault();
-                  window.open(href, '_blank');
-                }
+                if (e.target.closest('.download-btn') || e.target.closest('.delete-btn')) return;
+                incrementView(viewKey);
               });
               subItem.appendChild(link);
             }
@@ -699,7 +726,9 @@ semesterFilter.addEventListener('change', () => {
 });
 
 // Initial load
-loadYears();
+(async function bootstrap(){
+  loadYears();
+})();
 
 // Helpers to ensure standard options are always visible
 function normalizeTitle(t){
@@ -714,8 +743,8 @@ function canonicalizeResources(exam, resources){
     if (r.type === 'link') byTitle.set(normalizeTitle(r.title), r);
   });
 
-  const wantedInsem = ['Unit 1','Unit 2','Insem Que Paper','Insem Que Paper Solution'];
-  const wantedEndsem = ['Unit 3','Unit 4','Unit 5','Unit 6','Endsem Que Paper','Endsem Que Paper Solution','Decode/Book'];
+  const wantedInsem = ['Unit 1','Unit 2'];
+  const wantedEndsem = ['Unit 3','Unit 4','Unit 5','Unit 6','Decode/Book'];
   const wanted = exam === 'Insem' ? wantedInsem : wantedEndsem;
 
   for (const label of wanted){
@@ -734,10 +763,8 @@ function canonicalizeResources(exam, resources){
       }
       const hasHN = group.items.some(i => /handwritten/i.test(i.title));
       const hasIMP = group.items.some(i => /imp\s*questions|important\s*questions/i.test(i.title));
-      const hasBook = group.items.some(i => /book|decode/i.test(i.title));
       if (!hasHN) group.items.push({ title: 'Handwritten Notes — none', placeholder: true });
       if (!hasIMP) group.items.push({ title: 'IMP Questions — none', placeholder: true });
-      if (!hasBook) group.items.push({ title: 'Book/Decode — none', placeholder: true });
       out.push(group);
     } else {
       // Question papers and solutions

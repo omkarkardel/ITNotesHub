@@ -235,6 +235,7 @@ function getYearFromDefaults(name) {
   }
 
   // Event listeners for selects
+
   yearSelect.addEventListener('change', () => {
     const selectedYear = yearSelect.value;
     if (selectedYear === '') {
@@ -304,6 +305,7 @@ function getYearFromDefaults(name) {
     fd.append('subject', subject);
     fd.append('exam', exam);
     fd.append('label', label);
+    fd.append('accessType', 'Free');
     const type = getTypeForSection(sectionEl);
     if (type) fd.append('type', type);
     for (const f of files) fd.append('files', f, f.name);
